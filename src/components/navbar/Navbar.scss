@@ -1,0 +1,30 @@
+#navbar {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding:20px 0px;
+  display:flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+
+
+  .logo {
+    height: 100px;
+    width: 100px;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: row;
+    
+    &__item {
+      margin: 0px 20px;
+
+      &:last-child {
+        margin-right:0;
+      }
+    }
+  }
+}

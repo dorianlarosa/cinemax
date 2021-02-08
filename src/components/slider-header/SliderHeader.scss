@@ -1,0 +1,102 @@
+@import "../../assets/scss/_media.scss";
+
+#slider-header {
+  width: 100%;
+  height: 56.25vw;
+  background-image: url("./image/banner.jpg");
+  background-size: cover;
+  background-position: center center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+
+  @include md {
+    justify-content: center;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-image: linear-gradient(
+      90deg,
+      rgba(13, 13, 13, 1) 0%,
+      rgba(13, 13, 13, 1) 16%,
+      rgba(13, 13, 13, 0.8379726890756303) 34%,
+      rgba(13, 13, 13, 0.6026785714285714) 46%,
+      rgba(13, 13, 13, 0) 58%
+    );
+    background-size: contain;
+
+    @include md {
+      width: 65%;
+    }
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-image: linear-gradient(
+      0deg,
+      rgba(13, 13, 13, 1) 14%,
+      rgba(13, 13, 13, 0.7595413165266106) 46%,
+      rgba(13, 13, 13, 0) 100%
+    );
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+  }
+
+  .content {
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @include md {
+      display: block;
+      width: 65%;
+    }
+    @include lg {  
+      width: 50%;
+    }
+
+    .title-movie {
+      font-family: var(--font-title);
+      font-weight: 600;
+      text-align: center;
+      font-size: 2rem;
+
+      @include md {
+        font-size: 2.5rem;
+        text-align: initial;
+      }
+      @include lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .description-movie {
+      margin-top: 1.5rem;
+      display: none;
+
+      @include md {
+        display: block;
+      }
+    }
+
+    .btn {
+      margin-top: 1.5rem;
+      @include md {
+        margin-top: 2.5rem;
+      }
+    }
+  }
+}

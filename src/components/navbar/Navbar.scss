@@ -1,29 +1,53 @@
-#navbar {
+@import "../../assets/scss/utils.scss";
+
+.navbar {
+  width: 100%;
   width: 100%;
   position: fixed;
   left: 0;
   top: 0;
-  padding:20px 0px;
-  display:flex;
+  height: 60px;
+  display: flex;
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
+  background-color: var(--bg-color);
 
+  @include md {
+    height: 80px;
+  }
 
   .logo {
-    height: 100px;
-    width: 100px;
+    width: 120px;
+
+    @include md {
+      width: 150px;
+    }
+  }
+
+  .btn-toggle-menu {
+    @include lg {
+      display: none;
+    }
+    svg {
+      height: 30px;
+      width: 30px;
+    }
   }
 
   .menu {
-    display: flex;
     flex-direction: row;
-    
+    display: none;
+
+    @include lg {
+      display: flex;
+    }
     &__item {
       margin: 0px 20px;
-
+      font-family: var(--font-text);
+      font-size: 1rem;
       &:last-child {
-        margin-right:0;
+        margin-right: 0;
       }
     }
   }

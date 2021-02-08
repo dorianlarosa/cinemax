@@ -1,28 +1,62 @@
 import React, { Component } from "react";
 import "./MoviesList.scss";
-import Carousel from 'react-elastic-carousel' 
+import Slider from "react-slick";
 
 import MovieElement from "./movie-element/MovieElement";
 
 
-import dataMovies from "./data";
+function LinkSeeAll(props) {
+  return (
+    <span className="link-see-all">Voir tout</span>
+  );
+}
 
 class MoviesList extends Component {
   constructor(props) {
     super(props);
-    this.state = { 
-      movies: dataMovies,
+    this.state = {
+      movies: this.props.movies,
+      category: this.props.category,
+      showLinkSeeAll: this.props.showLinkSeeAll,
+      infinite: false,
     };
   }
 
   render() {
+    const showLinkSeeAll = this.state.showLinkSeeAll;
+    let button;
+    if (showLinkSeeAll) {
+      button = <LinkSeeAll />;
+    } else {
+      button = '';
+    }
+
+    const settings = {
+      dots: false,
+      infinite: this.state.infinite,
+      speed: 500,
+      slidesToShow: 6,
+      slidesToScroll: 6,
+      draggable: false,
+      afterChange: () => this.setState({ infinite: true }),
+    }
+
     return (
-      <div id="movies-list">
-        <Carousel isRTL={true} itemsToScroll={4} itemsToShow={4}>
-          {this.state.movies.map((movie) => (
-          <MovieElement key={movie.id} movie={movie} />
-          ))}
-        </Carousel>
+      <div className="movies-list">
+        <div className="container">
+          <div className="header-list">
+          <h2 className="title-category">{this.state.category} :</h2>
+          {button}
+          </div>
+
+          <div className="slider">
+            <Slider {...settings}>
+              {this.state.movies.map((movie) => (
+                <MovieElement key={movie.id} movie={movie} />
+              ))}
+            </Slider>
+          </div>
+        </div>
       </div>
     );
   }

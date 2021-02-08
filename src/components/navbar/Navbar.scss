@@ -12,7 +12,7 @@
   flex-direction: row;
   justify-content: space-between;
   background-color: var(--bg-color);
-
+  z-index: 50;
   @include md {
     height: 80px;
   }

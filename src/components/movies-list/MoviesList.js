@@ -15,8 +15,6 @@ class MoviesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      movies: this.props.movies,
-      category: this.props.category,
       showLinkSeeAll: this.props.showLinkSeeAll,
       infinite: false,
     };
@@ -40,18 +38,19 @@ class MoviesList extends Component {
       draggable: false,
       afterChange: () => this.setState({ infinite: true }),
     }
+    console.log(this.props.movies);
 
     return (
       <div className="movies-list">
         <div className="container">
           <div className="header-list">
-          <h2 className="title-category">{this.state.category} :</h2>
+          <h2 className="title-category">{this.props.category} :</h2>
           {button}
           </div>
 
           <div className="slider">
             <Slider {...settings}>
-              {this.state.movies.map((movie) => (
+              {this.props.movies.map((movie) => (
                 <MovieElement key={movie.id} movie={movie} />
               ))}
             </Slider>

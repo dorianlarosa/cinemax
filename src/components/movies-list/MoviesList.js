@@ -1,32 +1,29 @@
 import React, { Component } from "react";
 import "./MoviesList.scss";
 import Slider from "react-slick";
+import Loading from "./utils/Loading";
 
 import MovieElement from "./movie-element/MovieElement";
 
-
 function LinkSeeAll(props) {
-  return (
-    <span className="link-see-all">Voir tout</span>
-  );
+  return <span className="link-see-all">Voir tout</span>;
 }
 
 class MoviesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showLinkSeeAll: this.props.showLinkSeeAll,
-      infinite: false,
+      infinite: false
     };
   }
 
   render() {
-    const showLinkSeeAll = this.state.showLinkSeeAll;
+    const showLinkSeeAll = this.props.showLinkSeeAll;
     let button;
     if (showLinkSeeAll) {
       button = <LinkSeeAll />;
     } else {
-      button = '';
+      button = "";
     }
 
     const settings = {
@@ -37,26 +34,32 @@ class MoviesList extends Component {
       slidesToScroll: 6,
       draggable: false,
       afterChange: () => this.setState({ infinite: true }),
-    }
-    console.log(this.props.movies);
+    };
 
     return (
-      <div className="movies-list">
-        <div className="container">
-          <div className="header-list">
-          <h2 className="title-category">{this.props.category} :</h2>
-          {button}
-          </div>
+      <>
+        <div className="movies-list">
+          <div className="container">
+            <div className="header-list">
+              <h2 className="title-category">{this.props.category} :</h2>
+              {button}
+            </div>
 
-          <div className="slider">
-            <Slider {...settings}>
-              {this.props.movies.map((movie) => (
-                <MovieElement key={movie.id} movie={movie} />
-              ))}
-            </Slider>
+            <div className="slider">
+              
+              {this.props.loaded && this.props.movies != null ? (
+                <Slider {...settings}>
+                  {this.props.movies.map((movie) => (
+                    <MovieElement key={movie.id} movie={movie} />
+                  ))}
+                </Slider>
+              ) : (
+                <Loading />
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 }

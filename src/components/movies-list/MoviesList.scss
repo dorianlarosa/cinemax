@@ -22,7 +22,7 @@
       position: absolute;
       background: #00000094;
       z-index: 10;
-      width: 50px;
+      width: 40px;
       height: 100%;
       display: flex !important;
       align-items: center;
@@ -31,12 +31,12 @@
 
       &.slick-next {
         right: 0;
-        transform: translate(100%, -50%);
+        transform: translate(125%, -50%);
       }
 
       &.slick-prev {
         left: 0;
-        transform: translate(-100%, -50%);
+        transform: translate(-125%, -50%);
       }
 
       &.slick-disabled {

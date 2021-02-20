@@ -1,19 +1,19 @@
 import React, { Component } from "react";
-import "./MoviesList.scss";
+import "./MoviesSlider.scss";
 import Slider from "react-slick";
-import Loading from "./utils/Loading";
+import Loading from "../utils/Loading";
 
-import MovieElement from "./movie-element/MovieElement";
+import MovieElement from "../movie-element/MovieElement";
 
 function LinkSeeAll(props) {
   return <span className="link-see-all">Voir tout</span>;
 }
 
-class MoviesList extends Component {
+class MoviesSlider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      infinite: false
+      infinite: false,
     };
   }
 
@@ -32,10 +32,44 @@ class MoviesList extends Component {
       speed: 500,
       slidesToShow: 6,
       slidesToScroll: 6,
+      initialSlide: 0,
       draggable: false,
-      afterChange: () => this.setState({ infinite: true }),
+      afterChange: () => {
+        
+        this.setState({ infinite: true });
+      },
+      responsive: [
+        {
+          breakpoint: 1400,
+          settings: {
+            slidesToShow: 6,
+            slidesToScroll: 6,
+          },
+        },
+        {
+          breakpoint: 1200,
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 4,
+          },
+        },
+        {
+          breakpoint: 800,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 3,
+          },
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 2,
+          },
+        },
+      ],
     };
-
+    
     return (
       <>
         <div className="movies-list">
@@ -46,7 +80,6 @@ class MoviesList extends Component {
             </div>
 
             <div className="slider">
-              
               {this.props.loaded && this.props.movies != null ? (
                 <Slider {...settings}>
                   {this.props.movies.map((movie) => (
@@ -64,4 +97,4 @@ class MoviesList extends Component {
   }
 }
 
-export default MoviesList;
+export default MoviesSlider;

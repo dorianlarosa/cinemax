@@ -1,7 +1,12 @@
 import React, { Component } from "react";
-import { Navbar, MoviesList, MovieDetails } from "./components";
-import apiMovie from "./conf/api.movie";
-import SliderHeader from "./components/slider-header/SliderHeader";
+import {
+  Navbar,
+  MoviesSlider,
+  MovieDetails,
+  ListMovies,
+  VideoHeader,
+} from "./components";
+import apiMovie, { apiMovieMapData } from "./conf/api.movie";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -9,11 +14,57 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      popularMovies: [],
-      genreMovies: ["Mystère", "Animation", "Musique", "Horreur", "Thriller", "Western"],
-      infinite: false,
+      search: false,
+      headerMovie: {},
+      searchMovies: [],
+      popularMovies: null,
+      genreMovies: [
+        "Mystère",
+        "Animation",
+        "Musique",
+        "Horreur",
+        "Thriller",
+        "Western",
+      ],
       loaded: false,
     };
+  }
+
+  disableTransitionsResizeWindow() {
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      document.body.classList.add("resize-animation-stopper");
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        document.body.classList.remove("resize-animation-stopper");
+      }, 400);
+    });
+  }
+
+  toggleSearch = () => {
+    this.setState((prevState) => ({
+      search: !prevState.search,
+    }));
+  };
+
+  updateSearchMovies = (movies) => {
+    this.setState({
+      searchMovies: movies,
+    });
+    console.log(this.state.searchMovies);
+  };
+
+
+  getHeaderTendanceMovie() {
+    apiMovie
+      .get("/movie/popular?language=fr-FR&page=1")
+      .then((movies) => movies.data.results)
+      .then((movies) => {
+        //console.log(movies);
+        this.setState({
+          headerMovie: movies[0],
+        });
+      });
   }
 
   getPopularMovies() {
@@ -28,7 +79,6 @@ class App extends Component {
         popularMovies3: popularMovies3.data.results,
       }))
       .then(({ popularMovies1, popularMovies2, popularMovies3 }) => {
-
         // merge all pages
         const allPages = [
           ...popularMovies1,
@@ -37,14 +87,7 @@ class App extends Component {
         ];
 
         // set array popular movies
-        const popularMoviesDetails = allPages.map((m) => ({
-          id: m.id,
-          img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
-          title: m.title,
-          date: m.release_date,
-          vote_average: m.vote_average,
-          description: m.overview,
-        }));
+        const popularMoviesDetails = allPages.map(apiMovieMapData);
 
         this.setState({
           popularMovies: popularMoviesDetails,
@@ -60,15 +103,11 @@ class App extends Component {
       .get("/genre/movie/list?language=fr-FR")
       .then((genreMovies) => genreMovies.data.genres)
       .then((genreMovies) => {
-
         // get all genre with ids
         const genreMoviesDetails = [];
         let idListMovie = 0;
         genreMovies.map((item, index) => {
-        console.log(item.name);
-
           if (this.state.genreMovies.includes(item.name)) {
-            
             genreMoviesDetails.push({
               name: item.name,
               id: item.id,
@@ -117,18 +156,10 @@ class App extends Component {
               page4: page4.data.results,
             }))
             .then(({ page1, page2, page3, page4 }) => {
-
               // merge pages
               const allPages = [...page1, ...page2, ...page3, ...page4];
 
-              const moviesDetails = allPages.map((m) => ({
-                id: m.id,
-                img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
-                title: m.title,
-                date: m.release_date,
-                vote_average: m.vote_average,
-                description: m.overview,
-              }));
+              const moviesDetails = allPages.map(apiMovieMapData);
 
               // 1. Make a shallow copy of the items
               let items = [...this.state.genreMovies];
@@ -149,6 +180,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.disableTransitionsResizeWindow();
+    this.getHeaderTendanceMovie();
     this.getPopularMovies();
     this.getGenresMovies();
     this.setState({
@@ -157,28 +190,44 @@ class App extends Component {
   }
 
   render() {
-    const listCategoryMoviesSlider = this.state.genreMovies.map((item, index) => (
-      <MoviesList
-        key={index}
-        loaded={this.state.loaded}
-        category={"Films " + item.name}
-        movies={item.movies}
-        showLinkSeeAll={true}
-      />
-    ));
+    // console.log(this.state.genreMovies);
+    // console.log(this.state.popularMovies);
+
+    const listCategoryMoviesSlider = this.state.genreMovies.map(
+      (category, index) => (
+        <MoviesSlider
+          key={index}
+          loaded={this.state.loaded}
+          category={"Films " + category.name}
+          movies={category.movies}
+          showLinkSeeAll={true}
+        />
+      )
+    );
+
     return (
       <div className="App">
-        <Navbar />
-        <SliderHeader />
-        <MoviesList
-          loaded={this.state.loaded}
-          category="Films en tendance"
-          movies={this.state.popularMovies}
-          showLinkSeeAll={false}
+        <Navbar
+          toggleSearch={this.toggleSearch}
+          search={this.state.search}
+          updateSearchMovies={this.updateSearchMovies}
         />
+        {!this.state.search ? (
+          <>
+            <VideoHeader movie={this.state.headerMovie} />
 
-        {listCategoryMoviesSlider}
-
+            <MoviesSlider
+              key={12}
+              loaded={this.state.loaded}
+              category="Films en tendance"
+              movies={this.state.popularMovies}
+              showLinkSeeAll={false}
+            />
+            {listCategoryMoviesSlider}
+          </>
+        ) : (
+          <ListMovies movies={this.state.searchMovies} />
+        )}
       </div>
     );
   }

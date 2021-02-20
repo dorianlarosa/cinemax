@@ -1,0 +1,76 @@
+@import "../../assets/scss/utils.scss";
+
+.movies-list {
+  margin-top: 0rem;
+
+  .header-list {
+    display: flex;
+    justify-content: space-between;
+    .title-category {
+      font-size: 1.5rem;
+      font-family: var(--font-title);
+    }
+  }
+
+  .slider {
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+
+    
+
+    .slick-list {
+      overflow: visible;
+
+      .slick-slide {
+        position: relative;
+      }
+     
+    }
+    .slick-arrow {
+      position: absolute;
+      background: #0d0d0dab;
+      z-index: 10;
+      width: 30px;
+      height: 100%;
+      display: flex !important;
+      align-items: center;
+      flex-direction: column;
+      justify-content: center;
+
+      @include sm {
+        width: 40px;
+      }
+
+      @include md {
+        width: 40px;
+      }
+
+      &.slick-next {
+        right: 0;
+        transform: translate(65%, -50%);
+        @include sm {
+          transform: translate(86%, -50%);
+        }
+        @include md {
+          transform: translate(125%, -50%);
+        }
+      }
+
+      &.slick-prev {
+        left: 0;
+        transform: translate(-65%, -50%);
+        @include sm {
+          transform: translate(-86%, -50%);
+        }
+        @include md {
+          transform: translate(-125%, -50%);
+        }
+      }
+
+      &.slick-disabled {
+        opacity: 0;
+        cursor: initial;
+      }
+    }
+  }
+}

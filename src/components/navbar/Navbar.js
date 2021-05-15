@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import logo from "../../assets/images/logo.svg";
+
 import SearchBar from "./search-bar/SearchBar";
 
+import {BrowserRouter as Router, Link, Route} from "react-router-dom";
 import "./Navbar.scss";
 
 import { ReactComponent as MenuIcon } from "./utils/menu-icon.svg";
+
 
 class Navbar extends Component {
   render() {

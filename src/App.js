@@ -16,6 +16,7 @@ class App extends Component {
     this.state = {
       search: false,
       headerMovie: {},
+      headerImage : null,
       searchMovies: [],
       popularMovies: null,
       genreMovies: [
@@ -27,6 +28,8 @@ class App extends Component {
         "Western",
       ],
       loaded: false,
+      selectedMovie : undefined,
+      showDetails:false
     };
   }
 
@@ -55,14 +58,24 @@ class App extends Component {
   };
 
 
+  updateSelectedMovie = (movieId) => {
+    console.log(movieId);
+    this.setState({
+      selectedMovie: movieId,
+    });
+  };
+
+
   getHeaderTendanceMovie() {
     apiMovie
       .get("/movie/popular?language=fr-FR&page=1")
       .then((movies) => movies.data.results)
       .then((movies) => {
-        //console.log(movies);
+        console.log(movies);
         this.setState({
           headerMovie: movies[0],
+          headerImage: movies[0].backdrop_path
+
         });
       });
   }
@@ -123,6 +136,7 @@ class App extends Component {
           genreMovies: genreMoviesDetails,
         });
 
+
         // get all movies for all genres
         const allCategoriesMovies = [];
         this.state.genreMovies.map((item, index) => {
@@ -158,7 +172,6 @@ class App extends Component {
             .then(({ page1, page2, page3, page4 }) => {
               // merge pages
               const allPages = [...page1, ...page2, ...page3, ...page4];
-
               const moviesDetails = allPages.map(apiMovieMapData);
 
               // 1. Make a shallow copy of the items
@@ -169,6 +182,9 @@ class App extends Component {
               item.movies = [...moviesDetails];
               // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
               items[index] = item;
+
+              console.log(moviesDetails); 
+
               // 5. Set the state to our new copy
               this.setState({ genreMovies: items });
             });
@@ -189,6 +205,13 @@ class App extends Component {
     });
   }
 
+
+  toggleDetailsPanel = () => {
+    this.setState((prevState) => ({
+      showDetails: !prevState.showDetails
+    }));
+  }
+
   render() {
     // console.log(this.state.genreMovies);
     // console.log(this.state.popularMovies);
@@ -201,6 +224,8 @@ class App extends Component {
           category={"Films " + category.name}
           movies={category.movies}
           showLinkSeeAll={true}
+          updateSelectedMovie={this.updateSelectedMovie}
+          toggleDetailsPanel={this.toggleDetailsPanel}
         />
       )
     );
@@ -214,7 +239,7 @@ class App extends Component {
         />
         {!this.state.search ? (
           <>
-            <VideoHeader movie={this.state.headerMovie} />
+            <VideoHeader movie={this.state.headerMovie} imageMovie={this.state.headerImage}/>
 
             <MoviesSlider
               key={12}
@@ -222,12 +247,16 @@ class App extends Component {
               category="Films en tendance"
               movies={this.state.popularMovies}
               showLinkSeeAll={false}
+              updateSelectedMovie={this.updateSelectedMovie}
+              toggleDetailsPanel={this.toggleDetailsPanel}
             />
             {listCategoryMoviesSlider}
           </>
         ) : (
-          <ListMovies movies={this.state.searchMovies} />
+          <ListMovies movies={this.state.searchMovies} updateSelectedMovie={this.updateSelectedMovie} toggleDetailsPanel={this.toggleDetailsPanel}/>
         )}
+
+        <MovieDetails show={this.state.showDetails} movieId={this.state.selectedMovie} toggleDetailsPanel={this.toggleDetailsPanel}/>
       </div>
     );
   }

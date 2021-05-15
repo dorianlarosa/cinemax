@@ -3,11 +3,16 @@ import "./SearchBar.scss";
 import { Formik, Field } from "formik";
 import apiMovie, { apiMovieMapData } from "../../../conf/api.movie";
 
+import { ReactComponent as CloseIcon }from "../utils/close-icon.svg";
+
 const ComposantInput = ({ field, form: { touched, errors }, ...props }) => (
   <input type="text" {...props} {...field} />
 );
 
+
+
 class SearchBar extends Component {
+
   submit = (values, actions) => {
     let inputValue;
     if (values.query) {
@@ -24,18 +29,65 @@ class SearchBar extends Component {
     }
 
     if (inputValue != "") {
-      apiMovie
-        .get(`/search/movie?query=${inputValue}&language=fr-FR`)
-        .then((movies) => movies.data.results)
-        .then((movies) => {
-          const moviesDetails = movies.filter(function(m) {
-            return m.poster_path;
-          }).map(apiMovieMapData);
+     
+        Promise.all([
+          apiMovie.get(
+            `/search/multi?query=${inputValue}&language=fr-FR&page=1`
+          ),
+          apiMovie.get(
+            `/search/multi?query=${inputValue}&language=fr-FR&page=2`
 
-          this.props.updateSearchMovies(moviesDetails);
-        });
-    }
+          ),
+          apiMovie.get(
+            `/search/multi?query=${inputValue}&language=fr-FR&page=3`
+
+          ),
+          apiMovie.get(
+            `/search/multi?query=${inputValue}&language=fr-FR&page=4`
+
+          ),
+        ])
+
+          .then(([page1, page2, page3, page4]) => ({
+            page1: page1.data.results,
+            page2: page2.data.results,
+            page3: page3.data.results,
+            page4: page4.data.results,
+          }))
+          .then(({ page1, page2, page3, page4 }) => {
+            // merge pages
+            const allPages = [...page1, ...page2, ...page3, ...page4];
+
+            const moviesDetails = allPages.filter(function(m) {
+                  return m.poster_path;
+                }).map(apiMovieMapData);
+
+            console.log(moviesDetails); 
+
+            // 5. Set the state to our new copy
+            this.props.updateSearchMovies(moviesDetails);
+      });
+
+     }
   };
+
+  openSearchInput = (values, actions) => {
+     values.target.classList.add('open');
+  };
+
+  closeSearchInput = () => {
+    let searchField = document.getElementById('field-search');
+
+    console.log('remove');
+    
+    searchField.classList.remove('open');
+
+    if(searchField.value != "") {
+      searchField.value = "";
+      document.getElementById('form').submit();
+    }
+   };
+
 
   render() {
     return (
@@ -46,11 +98,14 @@ class SearchBar extends Component {
         validate={this.submmit}
       >
         {({ handleSubmit, handleChange, handleBlur, isSubmitting }) => (
-          <form className="search" onSubmit={handleSubmit}>
+          <form className="search" id="form" onSubmit={handleSubmit}>
             <Field
+              id="field-search"
               name="query"
               onKeyUp={this.submit}
               component={ComposantInput}
+              onFocus={this.openSearchInput}
+              onBlur={this.closeSearchInput}
             />
             <div className="symbol">
               <svg className="lens" viewBox="0 0 16 16">
@@ -63,6 +118,7 @@ C4.622,10.623,2.833,8.831,2.845,6.631L2.845,6.631z"
                 />
               </svg>
             </div>
+            <CloseIcon onClick={this.closeSearchInput}/>
           </form>
         )}
       </Formik>

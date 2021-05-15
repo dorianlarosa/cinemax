@@ -9,12 +9,13 @@ class VideoHeader extends Component {
     this.state = {
       movieinfosLoaded: false,
       movieTrailerUrl: null,
-      videoPlaying: true,
+      videoPlaying: false,
       videoControls: false,
       videoWidth: "100%",
       videoHeight: "100%",
       videoMuted: true,
       videoLoop: true,
+      displayVideo: "none",
     };
   }
 
@@ -24,7 +25,6 @@ class VideoHeader extends Component {
       .then((movies) => movies.data.results[0])
       .then((movie) => {
         let urlVideo;
-
         if (movie.site == "YouTube") {
           urlVideo = "https://www.youtube.com/watch?v=" + movie.key;
         } else {
@@ -46,7 +46,7 @@ class VideoHeader extends Component {
     this.setState((prevState) => ({
       videoMuted: !prevState.videoMuted,
     }));
-  }
+  };
 
   detectTogglePlay = () => {
     const element = document.getElementById("video");
@@ -63,12 +63,26 @@ class VideoHeader extends Component {
           videoPlaying: false,
         });
       }
-
-      
     }
-  }
+  };
+
+  playVideo = () => {
+    this.setState({
+      videoPlaying: true,
+    });
+    
+    setTimeout(() => {
+      this.setState({
+        displayVideo: "block",
+      });
+    }, 1000);
+  };
   componentDidMount() {
     window.addEventListener("scroll", this.detectTogglePlay);
+    setTimeout(() => {
+      this.playVideo();
+    }, 4000);
+
     if (this.props.movie.id && this.state.movieinfosLoaded === false) {
       this.getMovie();
     }
@@ -85,12 +99,20 @@ class VideoHeader extends Component {
         id="slider-header"
         style={{
           backgroundImage:
-            'url("https://image.tmdb.org/t/p/original/vOefWMYqC1S3aiCTD5MD8HeXl0Y.jpg")',
+            'url("https://image.tmdb.org/t/p/original' +
+            this.props.imageMovie +
+            '")',
         }}
       >
         {this.state.movieinfosLoaded ? (
           <>
-            <div className="video" id="video">
+            <div
+              className="video"
+              id="video"
+              style={{
+                display: this.state.displayVideo,
+              }}
+            >
               <ReactPlayer
                 url={this.state.movieTrailerUrl}
                 muted={this.state.videoMuted}

@@ -31,14 +31,28 @@ class MoviesSlider extends Component {
       infinite: this.state.infinite,
       speed: 500,
       slidesToShow: 6,
+      lazyLoad: true,
       slidesToScroll: 6,
       initialSlide: 0,
       draggable: false,
       afterChange: () => {
-        
         this.setState({ infinite: true });
       },
       responsive: [
+        {
+          breakpoint: 2000,
+          settings: {
+            slidesToShow: 7,
+            slidesToScroll: 7,
+          },
+        },
+        {
+          breakpoint: 1600,
+          settings: {
+            slidesToShow: 7,
+            slidesToScroll: 7,
+          },
+        },
         {
           breakpoint: 1400,
           settings: {
@@ -54,14 +68,14 @@ class MoviesSlider extends Component {
           },
         },
         {
-          breakpoint: 800,
+          breakpoint: 767,
           settings: {
             slidesToShow: 3,
             slidesToScroll: 3,
           },
         },
         {
-          breakpoint: 600,
+          breakpoint: 576,
           settings: {
             slidesToShow: 2,
             slidesToScroll: 2,
@@ -69,7 +83,36 @@ class MoviesSlider extends Component {
         },
       ],
     };
-    
+
+    const displayMovieElement = (element) => {
+      if (element != undefined) {
+        return (
+          <MovieElement
+            key={element.id}
+            movie={element}
+            updateSelectedMovie={this.props.updateSelectedMovie}
+            toggleDetailsPanel={this.props.toggleDetailsPanel}
+          />
+        );
+      }
+    };
+
+    const displayInitLoadMovies = () => {
+      return (
+        <>
+          <MovieElement key={1} movie="init" />
+          <MovieElement key={2} movie="init" />
+          <MovieElement key={3} movie="init" />
+          <MovieElement key={4} movie="init" />
+          <MovieElement key={5} movie="init" />
+          <MovieElement key={6} movie="init" />
+          <MovieElement key={7} movie="init" />
+          <MovieElement key={8} movie="init" />
+          <MovieElement key={9} movie="init" />
+        </>
+      );
+    };
+
     return (
       <>
         <div className="movies-list">
@@ -82,12 +125,10 @@ class MoviesSlider extends Component {
             <div className="slider">
               {this.props.loaded && this.props.movies != null ? (
                 <Slider {...settings}>
-                  {this.props.movies.map((movie) => (
-                    <MovieElement key={movie.id} movie={movie} />
-                  ))}
+                  {this.props.movies.map((movie) => displayMovieElement(movie))}
                 </Slider>
               ) : (
-                <Loading />
+                <Slider {...settings}>{displayInitLoadMovies()}</Slider>
               )}
             </div>
           </div>

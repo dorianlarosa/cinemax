@@ -15,17 +15,50 @@ const dateToYear = (date) => {
   return dateObject.getFullYear().toString();
 };
 
+const timeConvert = (runtime) => {
+  var num = runtime;
+  var hours = (num / 60);
+  var rhours = Math.floor(hours);
+  var minutes = (hours - rhours) * 60;
+  var rminutes = Math.round(minutes);
+  return rhours + "h " + rminutes + "m";
+  }
+  
+  const numberWithSpaces = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
 export default apiMovie;
 
 export const apiMovieMapData = (m) => {
-  if (m.poster_path != null) {
+  if (m.poster_path) {
     return {
       id: m.id,
       img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
+      originalImg: "https://image.tmdb.org/t/p/original" + m.poster_path,
       title: m.title,
       date: dateToYear(m.release_date),
-      vote_average: m.vote_average,
-      description: m.overview,
     };
   }
+};
+
+export const apiMovieMapDataDetails = (m) => {
+  
+    return {
+      id: m.id,
+      img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
+      originalImg: "https://image.tmdb.org/t/p/original" + m.poster_path,
+      title: m.title,
+      description: m.overview,
+      genres: m.genres.map(function(elem){
+        return elem.name;
+      }).join(" / "),
+      date: dateToYear(m.release_date),
+      vote: m.vote_average,
+      runtime: timeConvert(m.runtime),
+      production_companie : {
+        name: m.production_companies[0].name,
+        logo: "https://image.tmdb.org/t/p/w300" + m.production_companies[0].logo_path
+      },
+      budget: numberWithSpaces(m.budget) != "0" ? numberWithSpaces(m.budget) + " $" : "Non communiqué"
+    };
 };

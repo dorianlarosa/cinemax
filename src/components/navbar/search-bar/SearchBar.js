@@ -62,8 +62,6 @@ class SearchBar extends Component {
                   return m.poster_path;
                 }).map(apiMovieMapData);
 
-            console.log(moviesDetails); 
-
             // 5. Set the state to our new copy
             this.props.updateSearchMovies(moviesDetails);
       });
@@ -77,8 +75,6 @@ class SearchBar extends Component {
 
   closeSearchInput = () => {
     let searchField = document.getElementById('field-search');
-
-    console.log('remove');
     
     searchField.classList.remove('open');
 

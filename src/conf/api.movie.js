@@ -17,16 +17,16 @@ const dateToYear = (date) => {
 
 const timeConvert = (runtime) => {
   var num = runtime;
-  var hours = (num / 60);
+  var hours = num / 60;
   var rhours = Math.floor(hours);
   var minutes = (hours - rhours) * 60;
   var rminutes = Math.round(minutes);
   return rhours + "h " + rminutes + "m";
-  }
-  
-  const numberWithSpaces = (x) => {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-}
+};
+
+const numberWithSpaces = (x) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
 export default apiMovie;
 
 export const apiMovieMapData = (m) => {
@@ -42,23 +42,42 @@ export const apiMovieMapData = (m) => {
 };
 
 export const apiMovieMapDataDetails = (m) => {
-  
-    return {
-      id: m.id,
-      img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
-      originalImg: "https://image.tmdb.org/t/p/original" + m.poster_path,
-      title: m.title,
-      description: m.overview,
-      genres: m.genres.map(function(elem){
+  let urlVideo;
+  if (!m.video[0]) {
+    urlVideo = null;
+  } else if (m.video[0].site === "YouTube") {
+    urlVideo = "https://www.youtube.com/watch?v=" + m.video[0].key;
+  } else {
+    urlVideo = "https://vimeo.com/" + m.video[0].key;
+  }
+
+  return {
+    id: m.informations.id,
+    img: "https://image.tmdb.org/t/p/w300" + m.informations.poster_path,
+    originalImg:
+      "https://image.tmdb.org/t/p/original" + m.informations.poster_path,
+    background_image : "https://image.tmdb.org/t/p/original" + m.informations.backdrop_path,
+      title: m.informations.title,
+    description: m.informations.overview,
+    genres: m.informations.genres
+      .map(function (elem) {
         return elem.name;
-      }).join(" / "),
-      date: dateToYear(m.release_date),
-      vote: m.vote_average,
-      runtime: timeConvert(m.runtime),
-      production_companie : {
-        name: m.production_companies[0].name,
-        logo: "https://image.tmdb.org/t/p/w300" + m.production_companies[0].logo_path
-      },
-      budget: numberWithSpaces(m.budget) != "0" ? numberWithSpaces(m.budget) + " $" : "Non communiqué"
-    };
+      })
+      .join(" / "),
+    date: dateToYear(m.informations.release_date),
+    vote: m.informations.vote_average,
+    runtime: timeConvert(m.informations.runtime),
+    production_companie: {
+      name: m.informations.production_companies[0].name,
+      logo:
+        "https://image.tmdb.org/t/p/w300" +
+        m.informations.production_companies[0].logo_path,
+    },
+    budget:
+      numberWithSpaces(m.informations.budget) != "0"
+        ? numberWithSpaces(m.informations.budget) + " $"
+        : "Non communiqué",
+    similar: m.similar,
+    video_url: urlVideo,
+  };
 };

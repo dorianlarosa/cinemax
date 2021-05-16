@@ -54,12 +54,10 @@ class App extends Component {
     this.setState({
       searchMovies: movies,
     });
-    console.log(this.state.searchMovies);
   };
 
 
   updateSelectedMovie = (movieId) => {
-    console.log(movieId);
     this.setState({
       selectedMovie: movieId,
     });
@@ -71,7 +69,6 @@ class App extends Component {
       .get("/movie/popular?language=fr-FR&page=1")
       .then((movies) => movies.data.results)
       .then((movies) => {
-        console.log(movies);
         this.setState({
           headerMovie: movies[0],
           headerImage: movies[0].backdrop_path
@@ -183,8 +180,6 @@ class App extends Component {
               // 4. Put it back into our array. N.B. we *are* mutating the array here, but that's why we made a copy first
               items[index] = item;
 
-              console.log(moviesDetails); 
-
               // 5. Set the state to our new copy
               this.setState({ genreMovies: items });
             });
@@ -213,8 +208,12 @@ class App extends Component {
   }
 
   render() {
-    // console.log(this.state.genreMovies);
-    // console.log(this.state.popularMovies);
+
+    if (this.state.showDetails) {
+      document.body.classList.add("no-scroll")
+    } else {
+      document.body.classList.remove("no-scroll")
+    }
 
     const listCategoryMoviesSlider = this.state.genreMovies.map(
       (category, index) => (

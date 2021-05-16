@@ -26,6 +26,7 @@
   transition: none !important;
 }
 
+
 body {
   margin: 0;
   margin-top: 60px;
@@ -37,7 +38,10 @@ body {
   background-color: var(--bg-color);
   color: white;
 
- 
+  &.no-scroll {
+    overflow: hidden !important;
+  } 
+  
 
   @include md {
     margin-top: 80px;

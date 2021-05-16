@@ -1,51 +1,142 @@
+@import "../../assets/scss/_media.scss";
+
 #bg-blur {
   position: fixed;
   left: 0;
   top: 0;
-  background: rgba(253, 253, 253, 0.466);
+  background: rgba(59, 59, 59, 0.788);
   width: 100%;
   height: 100%;
   z-index: 100;
   visibility: hidden;
   opacity: 0;
-  transition: all 1s, visibility 0s 1s;
+  transition: all 1s, visibility 0s 1s, overflow 0s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: initial;
   &.show {
     visibility: visible;
     opacity: 1;
+  overflow-y: scroll;
+
     transition: all 1s, visibility 0s;
   }
 }
 
 #movie-details {
-  position: fixed;
-  transform: translate(-50%, -50%);
-  left: 50%;
-  top: 80%;
+  position:absolute;
   max-width: 100%;
   max-height: 100%;
-  background: black;
+  background: var(--bg-color);
   width: 50%;
-  height: 90%;
+  top: 40%;
   z-index: 110;
   visibility: hidden;
   opacity: 0;
   transition: all 1s, visibility 0s 1s;
+ 
 
   &.show {
     visibility: visible;
     opacity: 1;
     transition: all 1s, visibility 0s;
-    top: 50%;
+    top: 10%;
+  }
+
+
+  .video {
+    width: 99.84%;
+    height: 0;
+    padding-bottom: 56.25%;
+    position: relative;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor: pointer;
+
+    &::before {
+      content: "";
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 25%;
+      background-image: linear-gradient(
+        0deg,
+        rgba(13, 13, 13, 1) 14%,
+        rgba(13, 13, 13, 0.562) 46%,
+        rgba(13, 13, 13, 0) 100%
+      );
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center bottom;
+      z-index: 10;
+    }
+
+    &.play {
+      .container-play-icon {
+        opacity: 0;
+      }
+    }
+
+    &.full-screen {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .container-play-icon {
+      background: var(--linear-color);
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      border-radius: 100%;
+      padding: 20px;
+      height: 70px;
+      width: 70px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.7s;
+
+      z-index: 10;
+      #play-svg {
+        width: auto;
+        height: 100%;
+        fill: white;
+        transform: translateX(10%);
+      }
+    }
+
+    
+    .block-controls-video {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    iframe {
+      left: 0;
+      top: 0;
+      position: absolute;
+    }
   }
 
   .content-movie-details {
-      padding:2rem;
+    padding: 2rem;
 
     .title {
-        font-size: 1.125rem;
-        font-weight: 700; 
-        margin-top:3rem;
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-top: 3rem;
     }
+
     .header-details {
       display: flex;
 
@@ -65,41 +156,43 @@
     .movie-genre {
       font-size: 0.9rem;
 
-        margin-top:.8rem;
+      margin-top: 0.8rem;
     }
 
     .movie-description {
       font-size: 0.9rem;
-      font-weight:300;
-      margin-top:2rem;
-        color:rgb(202, 202, 202);
+      font-weight: 300;
+      margin-top: 2rem;
+      color: rgb(202, 202, 202);
     }
 
     .list-details {
       font-size: 0.9rem;
 
-        .list {
-            display: flex;
-            .col-label, .col-value {
-                display: flex;
-                flex-direction: column;
-            }
-            .col-label {
-                span {
-                    color:rgb(148, 148, 148);
-                    margin-top:1.4rem;
-
-                   
-                }
-            }
-
-            .col-value {
-                margin-left:1.5rem;
-                span {
-                    margin-top:1.4rem;
-                }
-            }
+      .list {
+        display: flex;
+        .col-label,
+        .col-value {
+          display: flex;
+          flex-direction: column;
         }
+        .col-label {
+          span {
+            color: rgb(148, 148, 148);
+            margin-top: 1.4rem;
+          }
+        }
+
+        .col-value {
+          margin-left: 1.5rem;
+          span {
+            margin-top: 1.4rem;
+          }
+        }
+      }
     }
   }
 }
+
+
+

@@ -78,6 +78,7 @@ class SearchBar extends Component {
     
     searchField.classList.remove('open');
 
+    // @todo : page is reload with submit methode
     if(searchField.value != "") {
       searchField.value = "";
       document.getElementById('form').submit();
@@ -88,7 +89,7 @@ class SearchBar extends Component {
   render() {
     return (
       <Formik
-        onSubmit={this.submit}
+        onSubmit={this.submit, this.props.closeMenuMobile}
         onChange={this.submit}
         initialValues={{ query: "" }}
         validate={this.submmit}

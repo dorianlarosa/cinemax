@@ -13,13 +13,16 @@
   }
 }
 
+/*
+* ELEMENT LOADING (BEFORE REVEAL)
+*/
 .img-loading {
   animation: animateBg 2s linear infinite;
   background-image: linear-gradient(45deg, #141414, #1f1e1e, #141414);
   background-size: 100% 500%;
   transition: all 0s;
   margin-bottom: 45px;
-  width:100%;
+  width: 100%;
   height: 59vw;
   transform: none !important;
 
@@ -45,20 +48,21 @@
   }
 
   img {
-    opacity:0;
+    opacity: 0;
     transition: opacity 1s;
   }
-
-
 }
 
-.img-loaded { 
+.img-loaded {
   img {
-    opacity:1;
+    opacity: 1;
     transition: opacity 2s;
   }
 }
 
+/*
+* MOVIE COVER ELEMENT
+*/
 .movie-element {
   z-index: 1;
   cursor: pointer;

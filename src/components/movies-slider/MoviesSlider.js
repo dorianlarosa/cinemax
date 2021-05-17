@@ -1,8 +1,11 @@
+/******
+ * MOVIES SLIDERS
+ ******/
+
 import React, { Component } from "react";
 import "./MoviesSlider.scss";
-import Slider from "react-slick";
-import Loading from "../utils/Loading";
 
+import Slider from "react-slick";
 import MovieElement from "../movie-element/MovieElement";
 
 function LinkSeeAll(props) {
@@ -23,7 +26,11 @@ class MoviesSlider extends Component {
         initialSlide: 0,
         draggable: false,
         afterChange: () => {
-          this.setState({ infinite: true });
+          this.setState(prevState => {
+            let settings = Object.assign({}, prevState.settings);  
+            settings.infinite = true;                     
+            return { settings };
+          })
         },
         responsive: [
           {
@@ -53,7 +60,8 @@ class MoviesSlider extends Component {
               slidesToShow: 5,
               slidesToScroll: 5,
             },
-          },{
+          },
+          {
             breakpoint: 1000,
             settings: {
               slidesToShow: 4,
@@ -92,7 +100,6 @@ class MoviesSlider extends Component {
     }
   };
 
-
   render() {
     const showLinkSeeAll = this.props.showLinkSeeAll;
     let button;
@@ -103,22 +110,31 @@ class MoviesSlider extends Component {
     }
 
     return (
-      <>
-        <div className="movies-list">
-          <div className="container">
-            <div className="header-list">
-              <h2 className="title-category">{this.props.category} :</h2>
-              {button}
-            </div>
+      <div className="movies-list">
+        <div className="container">
+          {this.props.loaded && this.props.movies != null ? (
+            <>
+              <div className="header-list">
+                <h2 className="title-category">{this.props.category} :</h2>
+                {button}
+              </div>
 
-            <div className="slider">
-              {this.props.loaded && this.props.movies != null ? (
+              <div className="slider">
                 <Slider {...this.state.settings}>
                   {this.props.movies.map((movie) =>
                     this.displayMovieElement(movie)
                   )}
                 </Slider>
-              ) : (
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="header-list">
+                <h2 className="title-category">Chargement...</h2>
+                {button}
+              </div>
+
+              <div className="slider">
                 <Slider {...this.state.settings}>
                   <MovieElement key={1} movie="init" />
                   <MovieElement key={2} movie="init" />
@@ -130,11 +146,11 @@ class MoviesSlider extends Component {
                   <MovieElement key={8} movie="init" />
                   <MovieElement key={9} movie="init" />
                 </Slider>
-              )}
-            </div>
-          </div>
+              </div>
+            </>
+          )}
         </div>
-      </>
+      </div>
     );
   }
 }

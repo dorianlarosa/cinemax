@@ -33,6 +33,10 @@ class App extends Component {
     };
   }
 
+  /******
+   * DISABLE TRANSITION WHEN WINDOW RESIZE
+   ******/
+
   disableTransitionsResizeWindow() {
     let resizeTimer;
     window.addEventListener("resize", () => {
@@ -44,24 +48,9 @@ class App extends Component {
     });
   }
 
-  toggleSearch = () => {
-    this.setState((prevState) => ({
-      search: !prevState.search,
-    }));
-  };
-
-  updateSearchMovies = (movies) => {
-    this.setState({
-      searchMovies: movies,
-    });
-  };
-
-  updateSelectedMovie = (movieId) => {
-    this.setState({
-      selectedMovie: movieId,
-    });
-  };
-
+  /******
+   * GET DATA FROM API
+   ******/
   getHeaderTendanceMovie() {
     apiMovie
       .get("/movie/popular?language=fr-FR&page=1")
@@ -186,6 +175,42 @@ class App extends Component {
       });
   }
 
+  /******
+   * SEARCH MOVIE
+   ******/
+  toggleSearch = () => {
+    this.setState((prevState) => ({
+      search: !prevState.search,
+    }));
+  };
+
+  updateSearchMovies = (movies) => {
+    this.setState({
+      searchMovies: movies,
+    });
+  };
+
+  /******
+   * UPDATE SELECTED (CLICK MOVIE)
+   ******/
+  updateSelectedMovie = (movieId) => {
+    this.setState({
+      selectedMovie: movieId,
+    });
+  };
+
+  /******
+   * DETAILS PANEL
+   ******/
+  toggleDetailsPanel = () => {
+    this.setState((prevState) => ({
+      showDetails: !prevState.showDetails,
+    }));
+  };
+
+  /******
+   * HOOK
+   ******/
   componentDidMount() {
     this.disableTransitionsResizeWindow();
     this.getHeaderTendanceMovie();
@@ -196,21 +221,15 @@ class App extends Component {
     });
   }
 
-  toggleDetailsPanel = () => {
-    this.setState((prevState) => ({
-      showDetails: !prevState.showDetails,
-    }));
-
-    
-  };
-
   render() {
+    // DISABLE SCROLL IF SHOW DETAILS PANEL
     if (this.state.showDetails) {
       document.body.classList.add("no-scroll");
     } else {
       document.body.classList.remove("no-scroll");
     }
 
+    // SLIDERS FOR EACH GENRE MOVIES
     const listCategoryMoviesSlider = this.state.genreMovies.map(
       (category, index) => (
         <MoviesSlider
@@ -241,8 +260,8 @@ class App extends Component {
               updateSelectedMovie={this.updateSelectedMovie}
               toggleDetailsPanel={this.toggleDetailsPanel}
               showDetails={this.state.showDetails}
-              />
-            
+            />
+
             <MoviesSlider
               key={12}
               loaded={this.state.loaded}

@@ -1,3 +1,7 @@
+/******
+ * MOVIE COVER ELEMENT FOR LIST
+ ******/
+
 import React, { Component } from "react";
 import "./MovieElement.scss";
 import { ReactComponent as DetailsIcon } from "./utils/details-icon.svg";
@@ -18,6 +22,10 @@ class MoviesElement extends Component {
     loadedClassName: "img-loaded",
   };
 
+  /******
+   * EVENTS
+   ******/
+  
   //image onLoad handler to update state to loaded
   onLoad = () => {
     _loaded[this.props.movie.img] = true;

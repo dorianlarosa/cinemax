@@ -1,38 +1,47 @@
+@import "../../../assets/scss/utils.scss";
+
 .search {
-    --background: #ffffff;
-    --text-color: #414856;
-    --border-radius: 10px;
-    --width: 260px;
-    --height: 40px;
-    width: auto;
-    height: var(--height);
+  --background: #ffffff;
+  --text-color: #414856;
+  --border-radius: 10px;
+  --width: 260px;
+  --height: 40px;
+  width: auto;
+  height: var(--height);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(#414856, 0.05);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @include max-lg {
+    margin: 20px;
+  }
+
+  input[type="text"] {
     position: relative;
-    overflow: hidden;
+    width: var(--height);
+    height: var(--height);
+    font: 400 16px "Varela Round", sans-serif;
+    color: var(--text-color);
+    border: 0;
+    box-sizing: border-box;
+    outline: none;
+    transition: width 0.6s ease;
+    z-index: 10;
+    opacity: 0;
+    cursor: pointer;
     border-radius: var(--border-radius);
-    box-shadow: 0 10px 30px rgba(#414856, 0.05);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    input[type="text"] {
-      position: relative;
-      width: var(--height);
-      height: var(--height);
-      font: 400 16px "Varela Round", sans-serif;
-      color: var(--text-color);
-      border: 0;
-      box-sizing: border-box;
-      outline: none;
-      padding: 0 30px 0 40px;
-      transition: width 0.6s ease;
-      z-index: 10;
-      opacity: 0;
-      cursor: pointer;
-
-      &.open {
+    @include max-lg {
+      width: 100%;
+    
         z-index: 0;
         opacity: 1;
         width: var(--width);
+        padding: 0 30px 0 40px;
+  
+       
         cursor: text;
         ~ .symbol {
           left: 0;
@@ -44,7 +53,7 @@
             clip-path: inset(0% 0% 0% 100%);
             transition: clip-path 0.04s linear 0.105s;
           }
-
+  
           .lens {
             top: 50%;
             left: 15px;
@@ -53,69 +62,104 @@
             transition: fill 0.3s ease;
           }
         }
-
+  
         ~ #close-icon {
-          opacity:1;
+          opacity: 1;
         }
       }
-    }
-    .symbol {
-      height: 100%;
-      width: 100%;
-      position: absolute;
-      top: 0;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      &:before {
-        content: "";
-        position: absolute;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        transition: width 0.6s ease;
-      }
-      &:after {
-        content: "";
-        position: absolute;
-        top: 21px;
-        left: 21px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        z-index: 1;
-        clip-path: inset(0% 0% 0% 0%);
-        transition: clip-path 0.04s linear 0.225s;
+    
+    
+
+    &.open {
+      z-index: 0;
+      opacity: 1;
+      width: var(--width);
+      padding: 0 30px 0 40px;
+
+     
+      cursor: text;
+      ~ .symbol {
+        left: 0;
+        width: initial;
+        &::before {
+          width: 0%;
+        }
+        &:after {
+          clip-path: inset(0% 0% 0% 100%);
+          transition: clip-path 0.04s linear 0.105s;
+        }
+
+        .lens {
+          top: 50%;
+          left: 15px;
+          transform: translate(0, -50%);
+          fill: var(--action-color);
+          transition: fill 0.3s ease;
+        }
       }
 
-      .lens {
-        position: absolute;
-        fill: #fff;
-        stroke: none;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-        fill: #fff;
-        width: 16px;
-        height: 16px;
-        z-index: 2;
-        transition: top 0.2s linear, left 0.2s linear;
+      ~ #close-icon {
+        opacity: 1;
       }
-    }
-
-    #close-icon { 
-      height: 100%;
-      width: 13px;
-      position: absolute;
-      top: 0;
-      right: 11px;
-      z-index: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity:0;
-      cursor: pointer;
     }
   }
+  .symbol {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:before {
+      content: "";
+      position: absolute;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      transition: width 0.6s ease;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 21px;
+      left: 21px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      z-index: 1;
+      clip-path: inset(0% 0% 0% 0%);
+      transition: clip-path 0.04s linear 0.225s;
+    }
+
+    .lens {
+      position: absolute;
+      fill: #fff;
+      stroke: none;
+      transform: translate(-50%, -50%);
+      top: 50%;
+      left: 50%;
+      fill: #fff;
+      width: 16px;
+      height: 16px;
+      z-index: 2;
+      transition: top 0.2s linear, left 0.2s linear;
+    }
+  }
+
+  #close-icon {
+    height: 100%;
+    width: 13px;
+    position: absolute;
+    top: 0;
+    right: 11px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    cursor: pointer;
+  }
+}

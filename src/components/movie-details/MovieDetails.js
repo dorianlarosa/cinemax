@@ -1,16 +1,12 @@
-import React, { Component, useEffect, useState } from "react";
-import apiMovie, { apiMovieMapDataDetails } from "../../conf/api.movie";
-import ReactPlayer from "react-player";
-import { ReactComponent as CloseIcon } from "./utils/close.svg";
+/******
+ * COMPONENT PANEL FOR VIEWS DETAILS MOVIE ONCLICK
+ ******/
 
-
-import { Duration } from "../";
-import { VideoPlayer } from "../";
-
-
-import screenfull from "screenfull";
-
+import React, { Component } from "react";
 import "./MovieDetails.scss";
+import apiMovie, { apiMovieMapDataDetails } from "../../conf/api.movie";
+import { ReactComponent as CloseIcon } from "./utils/close.svg";
+import { VideoPlayer } from "../";
 
 class MovieDetails extends Component {
   constructor(props) {
@@ -19,10 +15,13 @@ class MovieDetails extends Component {
       movie: undefined,
       show: false,
       displayVideo: "none",
-      canPlayVideo : true
-    }; 
+      canPlayVideo: true,
+    };
   }
 
+  /******
+   * GET DATA OF MOVIE FROM MOVIE ID
+   ******/
   getMovie() {
     Promise.all([
       apiMovie.get(`/movie/${this.props.movieId}?language=fr-FR`),
@@ -52,11 +51,18 @@ class MovieDetails extends Component {
       });
   }
 
+  /******
+   * EVENT CLOSE PANEL DETAILS
+   ******/
   closePanel = () => {
     this.setState({ canPlayVideo: false });
     this.props.toggleDetailsPanel();
   };
 
+
+  /******
+   * HOOK
+   ******/
   componentDidUpdate(prevProps) {
     if (this.props.movieId !== prevProps.movieId) {
       this.getMovie();
@@ -67,66 +73,65 @@ class MovieDetails extends Component {
     }
   }
   render() {
-
     let showStatus = this.props.show ? " show" : "";
 
     return (
       <>
         {this.state.movie ? (
           <>
-            <div id="bg-blur" className={showStatus} 
-              onClick={this.closePanel}>
+            <div id="bg-blur" className={showStatus} onClick={this.closePanel}>
               <div
                 id="movie-details"
                 className={showStatus}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="content-movie-details">
+                  <CloseIcon className="close-btn" onClick={this.closePanel} />
 
-                <CloseIcon className="close-btn" onClick={this.closePanel}/>
+                  <VideoPlayer
+                    url={this.state.movie.video_url}
+                    background_image={this.state.movie.background_image}
+                    canPlayVideo={this.state.canPlayVideo}
+                  />
 
-                <VideoPlayer
-                url={this.state.movie.video_url}
-                background_image={this.state.movie.background_image} 
-                canPlayVideo={this.state.canPlayVideo}/>
-               
-                <div className="informations-movie-details">
-                  <div className="header-details">
-                    <span className="movie-title">
-                      {this.state.movie.title}
-                    </span>
-                    <span className="movie-note">
-                      {this.state.movie.vote}/10
-                    </span>
-                  </div>
-                  <div className="movie-genre">{this.state.movie.genres}</div>
-                  <p className="movie-description">
-                    {this.state.movie.description}
-                  </p>
-                  <div className="list-details">
-                    <p className="title">Détails</p>
-                    <div className="list">
-                      <div className="col-label">
-                        <span>Durée :</span>
-                        <span>Production :</span>
-                        <span>Budget :</span>
-                      </div>
-                      <div className="col-value">
-                        <span>{this.state.movie.runtime}</span>
-                        <span>{this.state.movie.production_companie.name}</span>
-                        <span>{this.state.movie.budget}</span>
+                  <div className="informations-movie-details">
+                    <div className="header-details">
+                      <span className="movie-title">
+                        {this.state.movie.title}
+                      </span>
+                      <span className="movie-note">
+                        {this.state.movie.vote}/10
+                      </span>
+                    </div>
+                    <div className="movie-genre">{this.state.movie.genres}</div>
+                    <p className="movie-description">
+                      {this.state.movie.description}
+                    </p>
+                    <div className="list-details">
+                      <p className="title">Détails</p>
+                      <div className="list">
+                        <div className="col-label">
+                          <span>Durée :</span>
+                          <span>Production :</span>
+                          <span>Budget :</span>
+                        </div>
+                        <div className="col-value">
+                          <span>{this.state.movie.runtime}</span>
+                          <span>
+                            {this.state.movie.production_companie.name}
+                          </span>
+                          <span>{this.state.movie.budget}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="list-suggestion">
-                    <p className="title">Titres similaires</p>
+                    <div className="list-suggestion">
+                      <p className="title">Titres similaires</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            </div>
-
           </>
         ) : (
           <>

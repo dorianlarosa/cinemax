@@ -1,3 +1,7 @@
+/******
+ * COMPONENT LIST MOVIE WITHOUT SLIDERS
+ ******/
+
 import React, { Component } from "react";
 import MovieElement from "../movie-element/MovieElement";
 import "./ListMovies.scss";

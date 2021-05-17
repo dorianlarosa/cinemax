@@ -1,11 +1,8 @@
 import React, { Component, useEffect, useState } from "react";
 import apiMovie, { apiMovieMapDataDetails } from "../../conf/api.movie";
 import ReactPlayer from "react-player";
-import { ReactComponent as PlayIcon } from "./utils/play-arrow.svg";
-import { ReactComponent as FullScreenIcon } from "./utils/fullscreen.svg";
-// import { ReactComponent as PauseIcon } from "./utils/pause.svg";
-import { ReactComponent as MutedIcon } from "./utils/muted.svg";
-import { ReactComponent as UnmutedIcon } from "./utils/unmuted.svg";
+import { ReactComponent as CloseIcon } from "./utils/close.svg";
+
 
 import { Duration } from "../";
 import { VideoPlayer } from "../";
@@ -84,13 +81,16 @@ class MovieDetails extends Component {
                 className={showStatus}
                 onClick={(e) => e.stopPropagation()}
               >
-                
+                <div className="content-movie-details">
+
+                <CloseIcon className="close-btn" onClick={this.closePanel}/>
+
                 <VideoPlayer
                 url={this.state.movie.video_url}
                 background_image={this.state.movie.background_image} 
                 canPlayVideo={this.state.canPlayVideo}/>
                
-                <div className="content-movie-details">
+                <div className="informations-movie-details">
                   <div className="header-details">
                     <span className="movie-title">
                       {this.state.movie.title}
@@ -125,6 +125,8 @@ class MovieDetails extends Component {
                 </div>
               </div>
             </div>
+            </div>
+
           </>
         ) : (
           <>

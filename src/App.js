@@ -16,7 +16,7 @@ class App extends Component {
     this.state = {
       search: false,
       headerMovie: {},
-      headerImage : null,
+      headerImage: null,
       searchMovies: [],
       popularMovies: null,
       genreMovies: [
@@ -28,8 +28,8 @@ class App extends Component {
         "Western",
       ],
       loaded: false,
-      selectedMovie : undefined,
-      showDetails:false
+      selectedMovie: undefined,
+      showDetails: false,
     };
   }
 
@@ -56,13 +56,11 @@ class App extends Component {
     });
   };
 
-
   updateSelectedMovie = (movieId) => {
     this.setState({
       selectedMovie: movieId,
     });
   };
-
 
   getHeaderTendanceMovie() {
     apiMovie
@@ -71,8 +69,7 @@ class App extends Component {
       .then((movies) => {
         this.setState({
           headerMovie: movies[0],
-          headerImage: movies[0].backdrop_path
-
+          headerImage: movies[0].backdrop_path,
         });
       });
   }
@@ -132,7 +129,6 @@ class App extends Component {
         this.setState({
           genreMovies: genreMoviesDetails,
         });
-
 
         // get all movies for all genres
         const allCategoriesMovies = [];
@@ -200,19 +196,19 @@ class App extends Component {
     });
   }
 
-
   toggleDetailsPanel = () => {
     this.setState((prevState) => ({
-      showDetails: !prevState.showDetails
+      showDetails: !prevState.showDetails,
     }));
-  }
+
+    
+  };
 
   render() {
-
     if (this.state.showDetails) {
-      document.body.classList.add("no-scroll")
+      document.body.classList.add("no-scroll");
     } else {
-      document.body.classList.remove("no-scroll")
+      document.body.classList.remove("no-scroll");
     }
 
     const listCategoryMoviesSlider = this.state.genreMovies.map(
@@ -236,10 +232,17 @@ class App extends Component {
           search={this.state.search}
           updateSearchMovies={this.updateSearchMovies}
         />
+
         {!this.state.search ? (
           <>
-            <VideoHeader movie={this.state.headerMovie} imageMovie={this.state.headerImage}/>
-
+            <VideoHeader
+              movie={this.state.headerMovie}
+              imageMovie={this.state.headerImage}
+              updateSelectedMovie={this.updateSelectedMovie}
+              toggleDetailsPanel={this.toggleDetailsPanel}
+              showDetails={this.state.showDetails}
+              />
+            
             <MoviesSlider
               key={12}
               loaded={this.state.loaded}
@@ -252,10 +255,18 @@ class App extends Component {
             {listCategoryMoviesSlider}
           </>
         ) : (
-          <ListMovies movies={this.state.searchMovies} updateSelectedMovie={this.updateSelectedMovie} toggleDetailsPanel={this.toggleDetailsPanel}/>
+          <ListMovies
+            movies={this.state.searchMovies}
+            updateSelectedMovie={this.updateSelectedMovie}
+            toggleDetailsPanel={this.toggleDetailsPanel}
+          />
         )}
 
-        <MovieDetails show={this.state.showDetails} movieId={this.state.selectedMovie} toggleDetailsPanel={this.toggleDetailsPanel}/>
+        <MovieDetails
+          show={this.state.showDetails}
+          movieId={this.state.selectedMovie}
+          toggleDetailsPanel={this.toggleDetailsPanel}
+        />
       </div>
     );
   }

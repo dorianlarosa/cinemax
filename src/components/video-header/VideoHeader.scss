@@ -3,13 +3,11 @@
 #slider-header {
   width: 100%;
   height: 56.25vw;
-
   position: relative;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  padding-top: 56vw;
-  margin-bottom: 19rem;
+  margin-bottom: 14rem;
 
   @include md {
     display: flex;
@@ -17,8 +15,10 @@
     justify-content: center;
     height: 45.25vw;
     padding-top: 0;
-    margin-bottom: 4rem;
+    margin-bottom: -5rem;
+    overflow: hidden;
   }
+
   &::after {
     content: "";
     position: absolute;
@@ -62,12 +62,15 @@
 
   .video {
     position: absolute;
-    height: 100%;
+    height: 130%;
     width: 100%;
     right: 0;
-    top: 0;
+    top: -101px;
+    display: none;
     @include md {
-      width: 80.25vw;
+      width: 105.25vw;
+      right: -130px;
+      display: block;
     }
     .block-controls-video {
       position: absolute;
@@ -78,7 +81,7 @@
     }
     .btn-toggle-sound {
       position: absolute;
-      bottom: 20px;
+      bottom: 70px;
       right: 20px;
       z-index: 20;
       border: 1px solid white;
@@ -90,6 +93,7 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
+
       @include hover-supported {
         background-color: rgba(255, 255, 255, 0.219);
       }
@@ -97,8 +101,20 @@
       @include md {
         height: 50px;
         width: 50px;
-        bottom: 100px;
-        right: 50px;
+        bottom: 110px;
+        right: 190px;
+      }
+
+      @include lg {
+        bottom: 130px;
+      }
+
+      @include xl {
+        bottom: 170px;
+      }
+
+      @include xxl {
+        bottom: 190px;
       }
       svg {
         width: 20px;
@@ -132,18 +148,25 @@
 
   .content {
     z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: block;
     margin-top: 30px;
+    position: absolute;
+    bottom: -20px;
+    width: 100%;
+    transform: translateY(100%);
 
     @include md {
+      position: relative;
+      transform: initial;
+
       display: block;
       width: 50%;
       margin-top: 0px;
+      margin-bottom: 100px;
     }
+
     @include lg {
-      width: 35%;
+      width: 500px;
     }
 
     .title-movie {
@@ -151,30 +174,57 @@
       font-weight: 600;
       text-align: center;
       font-size: 1.5rem;
+      margin-bottom: 0;
 
       @include md {
-        font-size: 2rem;
+        font-size: 1.5rem;
         text-align: initial;
       }
       @include lg {
-        font-size: 2.5rem;
+        font-size: 2rem;
       }
     }
 
-    .description-movie {
-      margin-top: 1.5rem;
+    .container-description-movie {
+      max-height: 500px;
+      transition: all 1.5s;
       overflow: hidden;
-
-      display: -webkit-box;
-      max-height: 70px; /* fallback */
-      -webkit-line-clamp: 3; /* number of lines to show */
+      &.hide-text {
+        @include md {
+          max-height: 0;
+        }
+      }
+    }
+    .description-movie {
+      margin-top: 0.5rem;
+      overflow: hidden;
+      font-size: 0.8rem;
+      max-height: 50px; /* fallback */
+      -webkit-line-clamp: 2; /* number of lines to show */
       -webkit-box-orient: vertical;
+      display: -webkit-box;
+      margin-bottom: 0.5rem;
+      text-align: center;
+
+      @include md {
+        display: -webkit-box;
+        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
+        text-align: initial;
+      }
     }
 
     .btn {
-      margin-top: 1.5rem;
+      margin-left: auto;
+      display: block;
+      margin-right: auto;
+      margin-top: 0.5rem;
       @include md {
-        margin-top: 2.5rem;
+        margin-left: initial;
+        margin-right: initial;
+
+        display: initial;
+        margin-top: 1rem;
       }
     }
   }

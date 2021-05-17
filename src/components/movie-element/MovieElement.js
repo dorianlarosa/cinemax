@@ -27,7 +27,7 @@ class MoviesElement extends Component {
   click = () => {
     this.props.updateSelectedMovie(this.props.movie.id);
     this.props.toggleDetailsPanel();
-  }
+  };
 
   render() {
     let { className, loadedClassName, loadingClassName, ...props } = this.props;
@@ -37,27 +37,20 @@ class MoviesElement extends Component {
     }`;
 
     return (
-      <div
-        className={"movie-element " + className}
-        onClick={this.click}
-      >
-        {/* <p className="movie-element__title">{this.props.movie.title}</p> */}
+      <div className={"movie-element " + className} onClick={this.click}>
         <div className="movie-element__container-image">
           <div className="container-icon">
             <div className="content-icon">
               <DetailsIcon />
             </div>
           </div>
-          {this.props.movie.img === 'init' ? (
-              <LazyLoad once offset={-100}>
-                <img onLoad={this.onLoad} src={this.props.movie.img} />
-              </LazyLoad>
-          ) : (  
-              <LazyLoad once offset={-100}>
-                <img onLoad={this.onLoad} src={this.props.movie.img} />
-              </LazyLoad> 
+          {this.props.movie === "init" ? (
+            <img onLoad={this.onLoad} src={this.props.movie.img} />
+          ) : (
+            <LazyLoad once offset={-100}>
+              <img onLoad={this.onLoad} src={this.props.movie.img} />
+            </LazyLoad>
           )}
-   
         </div>
         <div className="movie-element__infos">
           <span className="info-1">{this.props.movie.title}</span>

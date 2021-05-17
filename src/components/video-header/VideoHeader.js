@@ -15,7 +15,8 @@ class VideoHeader extends Component {
       videoHeight: "100%",
       videoMuted: true,
       videoLoop: true,
-      displayVideo: "none",
+      visibilityVideo: "hidden",
+      hideDescription: false,
     };
   }
 
@@ -55,6 +56,45 @@ class VideoHeader extends Component {
       const position = element.getBoundingClientRect();
 
       if (position.top < window.innerHeight && position.bottom >= 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  togglePlay = () => {
+    this.setState((prevState) => ({
+      videoPlaying: !prevState.videoPlaying,
+    }));
+  };
+
+  playVideo = () => {
+    this.setState({
+      videoPlaying: true,
+      visibilityVideo: "visible",
+    });
+  };
+
+  stopVideo = () => {
+    this.setState({
+      videoPlaying: false,
+      visibilityVideo: "hidden",
+    });
+  };
+
+  click = () => {
+    this.props.updateSelectedMovie(this.props.movie.id);
+    this.props.toggleDetailsPanel();
+  };
+
+  componentDidMount() {
+    if (this.props.movie.id && this.state.movieinfosLoaded === false) {
+      this.getMovie();
+    }
+
+    window.addEventListener("scroll", (e) => {
+      if (this.detectTogglePlay()) {
         this.setState({
           videoPlaying: true,
         });
@@ -63,37 +103,51 @@ class VideoHeader extends Component {
           videoPlaying: false,
         });
       }
-    }
-  };
-
-  playVideo = () => {
-    this.setState({
-      videoPlaying: true,
     });
-    
+
+    window.addEventListener("resize", (e) => {
+      console.log(window.innerWidth > 768 && this.detectTogglePlay() === true);
+      if (window.innerWidth > 768 && this.detectTogglePlay() === true) {
+        this.playVideo();
+      } else {
+        this.stopVideo();
+      }
+    });
+
+    if (window.innerWidth > 768) {
+      setTimeout(() => {
+        this.playVideo();
+      }, 4000);
+    }
+
     setTimeout(() => {
       this.setState({
-        displayVideo: "block",
+        hideDescription: true,
       });
-    }, 1000);
-  };
-  componentDidMount() {
-    window.addEventListener("scroll", this.detectTogglePlay);
-    setTimeout(() => {
-      this.playVideo();
-    }, 4000);
-
-    if (this.props.movie.id && this.state.movieinfosLoaded === false) {
-      this.getMovie();
-    }
+    }, 7000);
   }
+
+
   componentDidUpdate() {
     if (this.props.movie.id && this.state.movieinfosLoaded === false) {
       this.getMovie();
     }
+
+    if (this.props.showDetails === true && this.state.videoPlaying === true) {
+      this.togglePlay();
+    }
+
+    if (
+      this.props.showDetails === false &&
+      this.state.videoPlaying === false &&
+      this.detectTogglePlay()
+    ) {
+      this.playVideo();
+    }
   }
 
   render() {
+    let classDescriptionVisible = this.state.hideDescription ? " hide-text" : "";
     return (
       <div
         id="slider-header"
@@ -110,7 +164,7 @@ class VideoHeader extends Component {
               className="video"
               id="video"
               style={{
-                display: this.state.displayVideo,
+                display: this.state.visibilityVideo,
               }}
             >
               <ReactPlayer
@@ -121,7 +175,7 @@ class VideoHeader extends Component {
                 controls={false}
                 width={this.state.videoWidth}
                 height={this.state.videoHeight}
-              />{" "}
+              />
               <div className="block-controls-video"></div>
               <div
                 className="btn-toggle-sound muted"
@@ -155,15 +209,23 @@ class VideoHeader extends Component {
             </div>
             <div className="content container">
               <p className="title-movie">{this.props.movie.title}</p>
-              <p className="description-movie">{this.props.movie.overview}</p>
-              <button className="btn btn__transparent">En savoir plus</button>
+              <div className={"container-description-movie" + classDescriptionVisible}>
+                <p className="description-movie">
+                  {this.props.movie.overview}
+                </p>
+              </div>
+              <button className="btn btn__transparent" onClick={this.click}>
+                En savoir plus
+              </button>
             </div>
           </>
         ) : (
           <div className="content container">
             <p className="title-movie">{this.props.movie.title}</p>
             <p className="description-movie">{this.props.movie.overview}</p>
-            <button className="btn btn__transparent">En savoir plus</button>
+            <button className="btn btn__transparent" onClick={this.click}>
+              En savoir plus
+            </button>
           </div>
         )}
       </div>

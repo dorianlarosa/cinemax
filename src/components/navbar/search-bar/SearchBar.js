@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./SearchBar.scss";
 import { Formik, Field } from "formik";
-import apiMovie, { apiMovieMapData } from "../../../conf/api.movie";
+import apiMovie, { apiMapData } from "../../../conf/api.movie";
 
 import { ReactComponent as CloseIcon }from "../utils/close-icon.svg";
 
@@ -60,7 +60,7 @@ class SearchBar extends Component {
 
             const moviesDetails = allPages.filter(function(m) {
                   return m.poster_path;
-                }).map(apiMovieMapData);
+                }).map(apiMapData);
 
             // 5. Set the state to our new copy
             this.props.updateSearchMovies(moviesDetails);

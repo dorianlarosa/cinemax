@@ -182,6 +182,8 @@ class MovieDetails extends Component {
               }}
               onClick={this.togglePlayVideo}
             >
+
+              {/* @todo toggle play/pause icon */}
               <div className="container-play-icon">
                 <PlayIcon />
               </div>

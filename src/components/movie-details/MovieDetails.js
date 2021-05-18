@@ -4,7 +4,7 @@
 
 import React, { Component } from "react";
 import "./MovieDetails.scss";
-import apiMovie, { apiMovieMapDataDetails } from "../../conf/api.movie";
+import apiMovie, { apiMapDataDetails } from "../../conf/api.movie";
 import { ReactComponent as CloseIcon } from "./utils/close.svg";
 import { VideoPlayer } from "../";
 
@@ -43,7 +43,7 @@ class MovieDetails extends Component {
           similar: moviesSimilar,
         };
 
-        const moviesDetails = apiMovieMapDataDetails(allInformationsMovie);
+        const moviesDetails = apiMapDataDetails(allInformationsMovie);
 
         this.setState((prevState) => ({
           movie: moviesDetails,

@@ -36,8 +36,8 @@ class MoviesSlider extends Component {
           {
             breakpoint: 2000,
             settings: {
-              slidesToShow: 7,
-              slidesToScroll: 7,
+              slidesToShow: 8,
+              slidesToScroll: 8,
             },
           },
           {
@@ -115,7 +115,7 @@ class MoviesSlider extends Component {
           {this.props.loaded && this.props.movies != null ? (
             <>
               <div className="header-list">
-                <h2 className="title-category">{this.props.category} :</h2>
+                <h2 className="title-category">{this.props.category}</h2>
                 {button}
               </div>
 

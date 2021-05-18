@@ -62,7 +62,7 @@ class MoviesElement extends Component {
         </div>
         <div className="movie-element__infos">
           <span className="info-1">{this.props.movie.title}</span>
-          <span className="info-2">{this.props.movie.date}</span>
+          <span className="info-2">{this.props.movie.type}</span>
         </div>
       </div>
     );

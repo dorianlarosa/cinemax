@@ -29,55 +29,79 @@ const numberWithSpaces = (x) => {
 };
 export default apiMovie;
 
-export const apiMovieMapData = (m) => {
+export const apiMapData = (m, type = "movie") => {
   if (m.poster_path) {
-    return {
-      id: m.id,
-      img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
-      originalImg: "https://image.tmdb.org/t/p/original" + m.poster_path,
-      title: m.title,
-      date: dateToYear(m.release_date),
-    };
+    let typeOfElement = m.media_type ? m.media_type : type;
+
+    if (typeOfElement === "movie") {
+      return {
+        id: m.id,
+        type: "Film",
+        img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
+        originalImg: "https://image.tmdb.org/t/p/original" + m.poster_path,
+        title: m.title,
+        note: m.vote_average,
+        date: dateToYear(m.release_date),
+      };
+    } else if (typeOfElement === "tv") {
+      return {
+        id: m.id,
+        type: "Série",
+        img: "https://image.tmdb.org/t/p/w300" + m.poster_path,
+        originalImg: "https://image.tmdb.org/t/p/original" + m.poster_path,
+        title: m.name,
+        note: m.vote_average,
+        date: dateToYear(m.first_air_date),
+      };
+    }
   }
 };
 
-export const apiMovieMapDataDetails = (m) => {
-  let urlVideo;
-  if (!m.video[0]) {
-    urlVideo = null;
-  } else if (m.video[0].site === "YouTube") {
-    urlVideo = "https://www.youtube.com/watch?v=" + m.video[0].key;
-  } else {
-    urlVideo = "https://vimeo.com/" + m.video[0].key;
-  }
+export const apiMapDataDetails = (m, type = "movie") => {
+  let typeOfElement = m.media_type ? m.media_type : type;
 
-  return {
-    id: m.informations.id,
-    img: "https://image.tmdb.org/t/p/w300" + m.informations.poster_path,
-    originalImg:
-      "https://image.tmdb.org/t/p/original" + m.informations.poster_path,
-    background_image : "https://image.tmdb.org/t/p/original" + m.informations.backdrop_path,
+  if (typeOfElement === "movie") {
+    let urlVideo;
+
+    if (!m.video[0]) {
+      urlVideo = null;
+    } else if (m.video[0].site === "YouTube") {
+      urlVideo = "https://www.youtube.com/watch?v=" + m.video[0].key;
+    } else {
+      urlVideo = "https://vimeo.com/" + m.video[0].key;
+    }
+
+    return {
+      id: m.informations.id,
+      type: m.typeOfElement,
+      img: "https://image.tmdb.org/t/p/w300" + m.informations.poster_path,
+      originalImg:
+        "https://image.tmdb.org/t/p/original" + m.informations.poster_path,
+      background_image:
+        "https://image.tmdb.org/t/p/original" + m.informations.backdrop_path,
       title: m.informations.title,
-    description: m.informations.overview,
-    genres: m.informations.genres
-      .map(function (elem) {
-        return elem.name;
-      })
-      .join(" / "),
-    date: dateToYear(m.informations.release_date),
-    vote: m.informations.vote_average,
-    runtime: timeConvert(m.informations.runtime),
-    production_companie: {
-      name: m.informations.production_companies[0].name,
-      logo:
-        "https://image.tmdb.org/t/p/w300" +
-        m.informations.production_companies[0].logo_path,
-    },
-    budget:
-      numberWithSpaces(m.informations.budget) != "0"
-        ? numberWithSpaces(m.informations.budget) + " $"
-        : "Non communiqué",
-    similar: m.similar,
-    video_url: urlVideo,
-  };
+      description: m.informations.overview,
+      genres: m.informations.genres
+        .map(function (elem) {
+          return elem.name;
+        })
+        .join(" / "),
+      date: dateToYear(m.informations.release_date),
+      vote: m.informations.vote_average,
+      runtime: timeConvert(m.informations.runtime),
+      production_companie: {
+        name: m.informations.production_companies[0].name,
+        logo:
+          "https://image.tmdb.org/t/p/w300" +
+          m.informations.production_companies[0].logo_path,
+      },
+      budget:
+        numberWithSpaces(m.informations.budget) != "0"
+          ? numberWithSpaces(m.informations.budget) + " $"
+          : "Non communiqué",
+      similar: m.similar,
+      video_url: urlVideo,
+    };
+  } else if (typeOfElement === "tv") {
+  }
 };

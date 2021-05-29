@@ -68,7 +68,6 @@ class Home extends Component {
       },
       loaded: false,
       selectedMovie: undefined,
-      showDetails: false,
     };
   }
 
@@ -173,7 +172,6 @@ class Home extends Component {
       .get("/genre/movie/list?language=fr-FR")
       .then((genreMovies) => genreMovies.data.genres)
       .then((genreMovies) => {
-        console.log(genreMovies);
         // get all genre with ids
         const genreMoviesDetails = [];
         let idListMovie = 0;
@@ -182,17 +180,18 @@ class Home extends Component {
             this.state.genres.movies.filter((g) => g.name === item.name)
               .length > 0
           ) {
-
-            let indexOfItem = this.state.genres.movies.map(e => e.name).indexOf(item.name);
-            let orderOfDisplay = this.state.genres.movies[indexOfItem].orderOfDisplay;
+            let indexOfItem = this.state.genres.movies
+              .map((e) => e.name)
+              .indexOf(item.name);
+            let orderOfDisplay = this.state.genres.movies[indexOfItem]
+              .orderOfDisplay;
             genreMoviesDetails.push({
               name: item.name,
               id: item.id,
               list_id: idListMovie,
               movies: null,
-                orderOfDisplay: orderOfDisplay,
-            type: "Films"
-
+              orderOfDisplay: orderOfDisplay,
+              type: "Films",
             });
 
             idListMovie++;
@@ -271,25 +270,26 @@ class Home extends Component {
       .get("/genre/tv/list?language=fr-FR")
       .then((genreSeries) => genreSeries.data.genres)
       .then((genreSeries) => {
-        console.log(genreSeries);
         // get all genre with ids
         const genreSeriesDetails = [];
         let idListMovie = 0;
         genreSeries.map((item, index) => {
-            if (
-                this.state.genres.series.filter((g) => g.name === item.name)
-                  .length > 0
-              ) {
-                let indexOfItem = this.state.genres.series.map(e => e.name).indexOf(item.name);
-                let orderOfDisplay = this.state.genres.series[indexOfItem].orderOfDisplay;
+          if (
+            this.state.genres.series.filter((g) => g.name === item.name)
+              .length > 0
+          ) {
+            let indexOfItem = this.state.genres.series
+              .map((e) => e.name)
+              .indexOf(item.name);
+            let orderOfDisplay = this.state.genres.series[indexOfItem]
+              .orderOfDisplay;
             genreSeriesDetails.push({
               name: item.name,
               id: item.id,
               list_id: idListMovie,
               movies: null,
-            orderOfDisplay: orderOfDisplay,
-            type: "Séries"
-
+              orderOfDisplay: orderOfDisplay,
+              type: "Séries",
             });
 
             idListMovie++;
@@ -379,27 +379,31 @@ class Home extends Component {
   }
 
   render() {
-    let mixedArray = [...this.state.genres.movies, ...this.state.genres.series];
+    let mixedArrayGenres = [
+      ...this.state.genres.movies,
+      ...this.state.genres.series,
+    ];
 
-    mixedArray.sort((a, b) =>
-    a.orderOfDisplay > b.orderOfDisplay ? 1 : b.orderOfDisplay > a.orderOfDisplay ? -1 : 0
-  );
-
-  
-    // SLIDERS FOR EACH GENRE MOVIES
-    const listCategoryMoviesSlider = mixedArray.map(
-      (category, index) => (
-        <MoviesSlider
-          key={index}
-          loaded={this.state.loaded}
-          category={category.type + " " + category.name}
-          movies={category.movies}
-          showLinkSeeAll={true}
-          updateSelectedMovie={this.props.updateSelectedMovie}
-          toggleDetailsPanel={this.props.toggleDetailsPanel}
-        />
-      )
+    mixedArrayGenres.sort((a, b) =>
+      a.orderOfDisplay > b.orderOfDisplay
+        ? 1
+        : b.orderOfDisplay > a.orderOfDisplay
+        ? -1
+        : 0
     );
+
+    // SLIDERS FOR EACH GENRE MOVIES
+    const listCategoryMoviesSlider = mixedArrayGenres.map((category, index) => (
+      <MoviesSlider
+        key={index}
+        loaded={this.state.loaded}
+        category={category.type + " " + category.name}
+        movies={category.movies}
+        showLinkSeeAll={true}
+        updateSelectedMovie={this.props.updateSelectedMovie}
+        toggleDetailsPanel={this.props.toggleDetailsPanel}
+      />
+    ));
 
     return (
       <>
@@ -410,7 +414,7 @@ class Home extends Component {
               imageMovie={this.state.headerImage}
               updateSelectedMovie={this.props.updateSelectedMovie}
               toggleDetailsPanel={this.props.toggleDetailsPanel}
-              showDetails={this.state.showDetails}
+              showDetails={this.props.showDetails}
             />
 
             <MoviesSlider

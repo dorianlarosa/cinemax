@@ -33,7 +33,7 @@ class MoviesElement extends Component {
   };
 
   click = () => {
-    this.props.updateSelectedMovie(this.props.movie.id);
+    this.props.updateSelectedMovie(this.props.movie.id, this.props.movie.type);
     this.props.toggleDetailsPanel();
   };
 

@@ -17,6 +17,7 @@ class VideoHeader extends Component {
       videoLoop: true,
       visibilityVideo: "hidden",
       hideDescription: false,
+      movieHasVideo: undefined,
     };
   }
 
@@ -25,15 +26,25 @@ class VideoHeader extends Component {
       .get(`/movie/${this.props.movie.id}/videos?language=fr-FR`)
       .then((movies) => movies.data.results[0])
       .then((movie) => {
-        let urlVideo;
-        if (movie.site == "YouTube") {
-          urlVideo = "https://www.youtube.com/watch?v=" + movie.key;
+        if (movie) {
+          let urlVideo;
+          if (movie.site == "YouTube") {
+            urlVideo = "https://www.youtube.com/watch?v=" + movie.key;
+          } else {
+            urlVideo = "https://vimeo.com/" + movie.key;
+          }
+
+          this.setState({
+            movieTrailerUrl: urlVideo,
+            movieHasVideo: true,
+          });
         } else {
-          urlVideo = "https://vimeo.com/" + movie.key;
+          this.setState({
+            movieHasVideo: false,
+          });
         }
 
         this.setState({
-          movieTrailerUrl: urlVideo,
           movieinfosLoaded: true,
         });
       });
@@ -76,6 +87,12 @@ class VideoHeader extends Component {
     });
   };
 
+  pauseVideo = () => {
+    this.setState({
+      videoPlaying: false,
+    });
+  };
+
   stopVideo = () => {
     this.setState({
       videoPlaying: false,
@@ -86,6 +103,14 @@ class VideoHeader extends Component {
   click = () => {
     this.props.updateSelectedMovie(this.props.movie.id);
     this.props.toggleDetailsPanel();
+  };
+
+  hideDescription = () => {
+    if (this.state.movieHasVideo) {
+      this.setState({
+        hideDescription: true,
+      });
+    }
   };
 
   componentDidMount() {
@@ -106,7 +131,6 @@ class VideoHeader extends Component {
     });
 
     window.addEventListener("resize", (e) => {
-      console.log(window.innerWidth > 768 && this.detectTogglePlay() === true);
       if (window.innerWidth > 768 && this.detectTogglePlay() === true) {
         this.playVideo();
       } else {
@@ -114,19 +138,10 @@ class VideoHeader extends Component {
       }
     });
 
-    if (window.innerWidth > 768) {
-      setTimeout(() => {
-        this.playVideo();
-      }, 4000);
-    }
-
     setTimeout(() => {
-      this.setState({
-        hideDescription: true,
-      });
+      this.hideDescription();
     }, 7000);
   }
-
 
   componentDidUpdate() {
     if (this.props.movie.id && this.state.movieinfosLoaded === false) {
@@ -134,28 +149,34 @@ class VideoHeader extends Component {
     }
 
     if (this.props.showDetails === true && this.state.videoPlaying === true) {
-      this.togglePlay();
+      this.pauseVideo();
     }
 
     if (
       this.props.showDetails === false &&
       this.state.videoPlaying === false &&
-      this.detectTogglePlay()
+      this.detectTogglePlay() &&
+      window.innerWidth > 768
     ) {
-      this.playVideo();
+      setTimeout(() => {
+        this.playVideo();
+      }, 6000);
     }
   }
 
   render() {
-    let classDescriptionVisible = this.state.hideDescription ? " hide-text" : "";
+    let classDescriptionVisible = this.state.hideDescription
+      ? " hide-text"
+      : "";
+
+    let backgroundImage = this.props.imageMovie
+      ? "https://image.tmdb.org/t/p/original" + this.props.imageMovie
+      : "";
     return (
       <div
         id="slider-header"
         style={{
-          backgroundImage:
-            'url("https://image.tmdb.org/t/p/original' +
-            this.props.imageMovie +
-            '")',
+          backgroundImage: 'url("' + backgroundImage + '")',
         }}
       >
         {this.state.movieinfosLoaded ? (
@@ -164,7 +185,7 @@ class VideoHeader extends Component {
               className="video"
               id="video"
               style={{
-                display: this.state.visibilityVideo,
+                visibility: this.state.visibilityVideo,
               }}
             >
               <ReactPlayer
@@ -209,10 +230,12 @@ class VideoHeader extends Component {
             </div>
             <div className="content container">
               <p className="title-movie">{this.props.movie.title}</p>
-              <div className={"container-description-movie" + classDescriptionVisible}>
-                <p className="description-movie">
-                  {this.props.movie.overview}
-                </p>
+              <div
+                className={
+                  "container-description-movie" + classDescriptionVisible
+                }
+              >
+                <p className="description-movie">{this.props.movie.overview}</p>
               </div>
               <button className="btn btn__transparent" onClick={this.click}>
                 En savoir plus

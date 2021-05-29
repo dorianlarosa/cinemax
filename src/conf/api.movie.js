@@ -59,21 +59,20 @@ export const apiMapData = (m, type = "movie") => {
 
 export const apiMapDataDetails = (m, type = "movie") => {
   let typeOfElement = m.media_type ? m.media_type : type;
+  let urlVideo;
+
+  if (!m.video[0]) {
+    urlVideo = null;
+  } else if (m.video[0].site === "YouTube") {
+    urlVideo = "https://www.youtube.com/watch?v=" + m.video[0].key;
+  } else {
+    urlVideo = "https://vimeo.com/" + m.video[0].key;
+  }
 
   if (typeOfElement === "movie") {
-    let urlVideo;
-
-    if (!m.video[0]) {
-      urlVideo = null;
-    } else if (m.video[0].site === "YouTube") {
-      urlVideo = "https://www.youtube.com/watch?v=" + m.video[0].key;
-    } else {
-      urlVideo = "https://vimeo.com/" + m.video[0].key;
-    }
-
     return {
       id: m.informations.id,
-      type: m.typeOfElement,
+      type: typeOfElement,
       img: "https://image.tmdb.org/t/p/w300" + m.informations.poster_path,
       originalImg:
         "https://image.tmdb.org/t/p/original" + m.informations.poster_path,
@@ -103,5 +102,33 @@ export const apiMapDataDetails = (m, type = "movie") => {
       video_url: urlVideo,
     };
   } else if (typeOfElement === "tv") {
+    return {
+      id: m.informations.id,
+      type: typeOfElement,
+      img: "https://image.tmdb.org/t/p/w300" + m.informations.poster_path,
+      originalImg:
+        "https://image.tmdb.org/t/p/original" + m.informations.poster_path,
+      background_image:
+        "https://image.tmdb.org/t/p/original" + m.informations.backdrop_path,
+      title: m.informations.name,
+      description: m.informations.overview,
+      genres: m.informations.genres
+        .map(function (elem) {
+          return elem.name;
+        })
+        .join(" / "),
+      date: dateToYear(m.informations.last_air_date),
+      vote: m.informations.vote_average,
+      runtime: timeConvert(m.informations.episode_run_time),
+      production_companie: {
+        name: m.informations.production_companies[0].name,
+        logo:
+          "https://image.tmdb.org/t/p/w300" +
+          m.informations.production_companies[0].logo_path,
+      },
+      similar: m.similar,
+      video_url: urlVideo,
+      number_of_seasons: m.informations.number_of_seasons,
+    };
   }
 };

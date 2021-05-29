@@ -22,6 +22,7 @@ class App extends Component {
       search: false,
       searchMovies: [],
       selectedMovie: undefined,
+      typeOfSelectedMovie:undefined,
       showDetails: false,
     };
   }
@@ -59,9 +60,10 @@ class App extends Component {
   /******
    * UPDATE SELECTED (CLICK MOVIE)
    ******/
-  updateSelectedMovie = (movieId) => {
+  updateSelectedMovie = (movieId, typeMovie) => {
     this.setState({
       selectedMovie: movieId,
+      typeOfSelectedMovie : typeMovie
     });
   };
 
@@ -106,10 +108,20 @@ class App extends Component {
                   toggleDetailsPanel={this.toggleDetailsPanel}
                   search={this.state.search}
                   searchMovies={this.state.searchMovies} 
+                  showDetails={this.state.showDetails}
+
                 />
               )}
             />
-            <Route path="/films" component={Movies} />
+            <Route path="/films" render={() => (
+                <Movies
+                  updateSelectedMovie={this.updateSelectedMovie}
+                  toggleDetailsPanel={this.toggleDetailsPanel}
+                  search={this.state.search}
+                  searchMovies={this.state.searchMovies} 
+                  showDetails={this.state.showDetails}
+                />
+              )} />
 
           </Switch>
         </Router>
@@ -117,6 +129,7 @@ class App extends Component {
         <MovieDetails
           show={this.state.showDetails}
           movieId={this.state.selectedMovie}
+          movieType={this.state.typeOfSelectedMovie}
           toggleDetailsPanel={this.toggleDetailsPanel}
         />
       </div>

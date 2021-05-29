@@ -135,11 +135,7 @@
         z-index: 10;
       }
 
-      &.play {
-        .container-play-icon {
-          opacity: 0;
-        }
-      }
+     
 
       &.full-screen {
         position: fixed;
@@ -149,50 +145,7 @@
         height: 100%;
       }
 
-      .container-play-icon {
-        background: var(--linear-color);
-        position: absolute;
-        transform: translate(-50%, -50%);
-        top: 50%;
-        left: 50%;
-        border-radius: 100%;
-        padding: 15px;
-        height: 50px;
-        width: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        transition: opacity 0.7s;
-        cursor: pointer;
-        z-index: 10;
-        opacity: 1;
-
-        @include hover-detect {
-          opacity: 0.8;
-        }
-
-        @include hover-supported {
-          opacity: 1 !important;
-        }
-
-        @include sm {
-          padding: 17px;
-          height: 60px;
-          width: 60px;
-        }
-
-        @include sm {
-          padding: 20px;
-          height: 70px;
-          width: 70px;
-        }
-        #play-svg {
-          width: auto;
-          height: 100%;
-          fill: white;
-          transform: translateX(10%);
-        }
-      }
+     
 
       .block-controls-video {
         position: absolute;

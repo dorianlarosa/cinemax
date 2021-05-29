@@ -69,7 +69,6 @@ class MovieDetails extends Component {
   };
 
   updateVolume = (value) => {
-    console.log(value);
     this.setState({
       volume: value,
     });
@@ -89,7 +88,6 @@ class MovieDetails extends Component {
   };
 
   handleProgress = (state) => {
-      console.log(state);
     let range = document.getElementById("time-range");
 
     if (!this.state.seeking) {
@@ -100,10 +98,6 @@ class MovieDetails extends Component {
 
       this.setState({ currentTime: parseFloat(state.playedSeconds) });
     }
-
-    console.log(Math.round(parseFloat(state.playedSeconds)));
-    console.log(this.state.duration);
-
 
     if (Math.round(parseFloat(state.playedSeconds)) >= this.state.duration - 1) {
        this.stopVideo();
@@ -185,7 +179,11 @@ class MovieDetails extends Component {
 
               {/* @todo toggle play/pause icon */}
               <div className="container-play-icon">
-                <PlayIcon />
+                <PlayIcon className={!playing ? "" : "hide"} />
+           
+                <PauseIcon
+                        className={!playing ? "hide" : ""}
+                      />
               </div>
 
               <div

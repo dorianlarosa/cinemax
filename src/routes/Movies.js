@@ -11,17 +11,55 @@ class Movies extends Component {
       headerImage: null,
       searchMovies: [],
       popularMovies: null,
-      genreMovies: [
-        "Mystère",
-        "Animation",
-        "Musique",
-        "Horreur",
-        "Thriller",
-        "Western",
-      ],
+           
+      genres:[
+          {
+            name: "Action",
+            orderOfDisplay: 1,
+          },
+          {
+            name: "Comédie",
+            orderOfDisplay: 2,
+          },
+          {
+            name: "Animation",
+            orderOfDisplay: 3,
+          },{
+            name: "Fantastique",
+            orderOfDisplay: 4,
+          },{
+            name: "Science-Fiction",
+            orderOfDisplay: 5,
+          },{
+            name: "Horreur",
+            orderOfDisplay: 6,
+          },{
+            name: "Drame",
+            orderOfDisplay: 7,
+          },{
+            name: "Familial",
+            orderOfDisplay: 8,
+          },{
+            name: "Aventure",
+            orderOfDisplay: 9,
+          },{
+            name: "Musique",
+            orderOfDisplay: 10,
+          },{
+            name: "Romance",
+            orderOfDisplay: 11,
+          },{
+            name: "Guerre",
+            orderOfDisplay: 12,
+          },{
+            name: "Western",
+            orderOfDisplay: 13,
+          },
+        ],
+       
+      
       loaded: false,
-      selectedMovie: undefined,
-      showDetails: false,
+      selectedMovie: undefined
     };
   }
 
@@ -33,12 +71,9 @@ class Movies extends Component {
       .get("/movie/popular?language=fr-FR&page=1")
       .then((movies) => movies.data.results)
       .then((movies) => {
-        const allMovies = movies.map((m) => apiMapData(m, "movie"));
-        console.log(allMovies);
-        
         this.setState({
-          headerMovie: allMovies[0],
-          headerImage: allMovies[0].backdrop_path,
+          headerMovie: movies[0],
+          headerImage: movies[0].backdrop_path,
         });
       });
   }
@@ -83,11 +118,18 @@ class Movies extends Component {
         const genreMoviesDetails = [];
         let idListMovie = 0;
         genreMovies.map((item, index) => {
-          if (this.state.genreMovies.includes(item.name)) {
+          if (
+            this.state.genres.filter((g) => g.name === item.name)
+              .length > 0
+          ) {
+            let indexOfItem = this.state.genres.map(e => e.name).indexOf(item.name);
+            let orderOfDisplay = this.state.genres[indexOfItem].orderOfDisplay;
             genreMoviesDetails.push({
               name: item.name,
               id: item.id,
               list_id: idListMovie,
+              orderOfDisplay: orderOfDisplay,
+
               movies: null,
             });
 
@@ -96,12 +138,12 @@ class Movies extends Component {
         });
 
         this.setState({
-          genreMovies: genreMoviesDetails,
+          genres: genreMoviesDetails,
         });
 
         // get all movies for all genres
         const allCategoriesMovies = [];
-        this.state.genreMovies.map((item, index) => {
+        this.state.genres.map((item, index) => {
           Promise.all([
             apiMovie.get(
               "/discover/movie?language=fr-FR&with_genres=" +
@@ -137,7 +179,7 @@ class Movies extends Component {
               const moviesDetails = allPages.map((m) => apiMapData(m, "movie"));
               
               // 1. Make a shallow copy of the items
-              let items = [...this.state.genreMovies];
+              let items = [...this.state.genres];
               // 2. Make a shallow copy of the item you want to mutate
               let item = { ...items[index] };
               // 3. Replace the property you're intested in
@@ -146,7 +188,8 @@ class Movies extends Component {
               items[index] = item;
 
               // 5. Set the state to our new copy
-              this.setState({ genreMovies: items });
+              this.setState({ genres: items });
+
             });
         });
       })
@@ -168,8 +211,15 @@ class Movies extends Component {
   }
 
   render() {
+
+    let mixedArrayGenres = [...this.state.genres];
+
+    mixedArrayGenres.sort((a, b) =>
+    a.orderOfDisplay > b.orderOfDisplay ? 1 : b.orderOfDisplay > a.orderOfDisplay ? -1 : 0
+  );
+
     // SLIDERS FOR EACH GENRE MOVIES
-    const listCategoryMoviesSlider = this.state.genreMovies.map(
+    const listCategoryMoviesSlider = mixedArrayGenres.map(
       (category, index) => (
         <MoviesSlider
           key={index}
@@ -190,7 +240,7 @@ class Movies extends Component {
           imageMovie={this.state.headerImage}
           updateSelectedMovie={this.props.updateSelectedMovie}
           toggleDetailsPanel={this.props.toggleDetailsPanel}
-          showDetails={this.state.showDetails}
+          showDetails={this.props.showDetails}
         />
 
         <MoviesSlider

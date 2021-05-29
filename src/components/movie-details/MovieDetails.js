@@ -23,11 +23,13 @@ class MovieDetails extends Component {
    * GET DATA OF MOVIE FROM MOVIE ID
    ******/
   getMovie() {
+    let type = this.props.movieType === "Film" ? "movie" : "tv";
+    console.log(this.props.movieType);
     Promise.all([
-      apiMovie.get(`/movie/${this.props.movieId}?language=fr-FR`),
-      apiMovie.get(`/movie/${this.props.movieId}/videos?language=fr-FR`),
+      apiMovie.get(`/${type}/${this.props.movieId}?language=fr-FR`),
+      apiMovie.get(`/${type}/${this.props.movieId}/videos?language=fr-FR`),
       apiMovie.get(
-        `/movie/${this.props.movieId}/recommendations?language=fr-FR&page=1`
+        `/${type}/${this.props.movieId}/recommendations?language=fr-FR&page=1`
       ),
     ])
       .then(([movieInformations, movieVideo, moviesSimilar]) => ({
@@ -36,6 +38,10 @@ class MovieDetails extends Component {
         moviesSimilar: moviesSimilar.data.results,
       }))
       .then(({ movieInformations, movieVideo, moviesSimilar }) => {
+        console.log(movieInformations);
+        console.log(movieVideo);
+        console.log(moviesSimilar);
+
         // merge pages
         const allInformationsMovie = {
           informations: movieInformations,
@@ -43,8 +49,9 @@ class MovieDetails extends Component {
           similar: moviesSimilar,
         };
 
-        const moviesDetails = apiMapDataDetails(allInformationsMovie);
+        const moviesDetails = apiMapDataDetails(allInformationsMovie, type);
 
+        console.log(moviesDetails);
         this.setState((prevState) => ({
           movie: moviesDetails,
         }));
@@ -58,7 +65,6 @@ class MovieDetails extends Component {
     this.setState({ canPlayVideo: false });
     this.props.toggleDetailsPanel();
   };
-
 
   /******
    * HOOK
@@ -107,24 +113,49 @@ class MovieDetails extends Component {
                     <p className="movie-description">
                       {this.state.movie.description}
                     </p>
-                    <div className="list-details">
-                      <p className="title">Détails</p>
-                      <div className="list">
-                        <div className="col-label">
-                          <span>Durée :</span>
-                          <span>Production :</span>
-                          <span>Budget :</span>
-                        </div>
-                        <div className="col-value">
-                          <span>{this.state.movie.runtime}</span>
-                          <span>
-                            {this.state.movie.production_companie.name}
-                          </span>
-                          <span>{this.state.movie.budget}</span>
+                    {this.state.movie.type === "movie" ? (
+                      <div className="list-details">
+                        <p className="title">Détails</p>
+                        <div className="list">
+                          <div className="col-label">
+                            <span>Durée :</span>
+                            <span>Date de sortie :</span>
+                            <span>Production :</span>
+                            <span>Budget :</span>
+                          </div>
+                          <div className="col-value">
+                            <span>{this.state.movie.runtime}</span>
+                            <span>{this.state.movie.date}</span>
+                            
+                            <span>
+                              {this.state.movie.production_companie.name}
+                            </span>
+                            <span>{this.state.movie.budget}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-
+                    ) : (
+                      <div className="list-details">
+                        <p className="title">Détails</p>
+                        <div className="list">
+                          <div className="col-label">
+                            <span>Durée d'un épisode :</span>
+                            <span>Nombre de saisons :</span>
+                            <span>Saison la plus récente :</span>
+                            <span>Production :</span>
+                            
+                          </div>
+                          <div className="col-value">
+                            <span>{this.state.movie.runtime}</span>
+                            <span>{this.state.movie.number_of_seasons}</span>
+                            <span>{this.state.movie.date}</span>
+                            <span>
+                              {this.state.movie.production_companie.name}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <div className="list-suggestion">
                       <p className="title">Titres similaires</p>
                     </div>

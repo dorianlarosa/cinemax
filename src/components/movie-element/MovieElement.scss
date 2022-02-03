@@ -2,6 +2,8 @@
 
 .slick-slide {
   padding: 10px;
+    
+
 }
 
 @keyframes animateBg {
@@ -14,58 +16,12 @@
 }
 
 /*
-* ELEMENT LOADING (BEFORE REVEAL)
-*/
-.img-loading {
-  animation: animateBg 2s linear infinite;
-  background-image: linear-gradient(45deg, #141414, #1f1e1e, #141414);
-  background-size: 100% 500%;
-  transition: all 0s;
-  margin-bottom: 45px;
-  width: 100%;
-  height: 59vw;
-  transform: none !important;
-
-  @include sm {
-    height: 38vw;
-  }
-
-  @include md {
-    height: 28vw;
-  }
-
-  @include xl {
-    height: 20vw;
-  }
-
-  @include hover-supported {
-  }
-  .container-icon {
-    display: none;
-  }
-  .movie-element__infos {
-    display: none;
-  }
-
-  img {
-    opacity: 0;
-    transition: opacity 1s;
-  }
-}
-
-.img-loaded {
-  img {
-    opacity: 1;
-    transition: opacity 2s;
-  }
-}
-
-/*
 * MOVIE COVER ELEMENT
 */
 .movie-element {
   z-index: 1;
   cursor: pointer;
+  position: relative;
   transition: transform 0.4s, opacity 0.4s;
 
   * {
@@ -93,9 +49,6 @@
     }
   }
 
-  &.loading {
-    background: red;
-  }
 
   &__title {
     color: grey;
@@ -103,6 +56,19 @@
 
   &__container-image {
     position: relative;
+    height: 59vw !important;
+
+      @include sm {
+        height: 38vw !important;
+      }
+
+      @include md {
+        height: 28vw !important;
+      }
+
+      @include xl {
+        height: 20vw !important;
+      }
     .container-icon {
       position: absolute;
       top: 50%;
@@ -113,6 +79,7 @@
       transform: translate(-50%, -50%);
       background-image: var(--linear-color);
       opacity: 0;
+      
       .content-icon {
         position: relative;
         height: 100%;
@@ -131,7 +98,20 @@
     img {
       width: 100%;
       height: auto;
-      //height: 385px;
+      object-fit: cover;
+      height: 59vw !important;
+
+      @include sm {
+        height: 38vw !important;
+      }
+
+      @include md {
+        height: 28vw !important;
+      }
+
+      @include xl {
+        height: 20vw !important;
+      }
     }
   }
 
@@ -141,6 +121,9 @@
     background: white;
     opacity: 0;
     padding: 5px 10px;
+    height: 42px;
+    justify-content: space-between;
+
     .info-1 {
       color: var(--bg-color);
       font-size: 0.7rem;
@@ -155,6 +138,59 @@
       margin-top: 0rem;
       font-size: 0.7rem;
       font-weight: 500;
+    }
+  }
+
+  /*
+  * ELEMENT LOADING (BEFORE REVEAL)
+  */
+
+  // LOADER
+  &:after {
+    content: "";
+
+    opacity: 0;
+    transition: opacity 1s;
+    animation: animateBg 1s linear infinite;
+    background-image: linear-gradient(45deg, #141414, #1f1e1e, #141414);
+    background-size: 100% 500%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: none !important;
+    height: 59vw;
+    @include sm {
+      height: 38vw;
+    }
+
+    @include md {
+      height: 28vw;
+    }
+
+    @include xl {
+      height: 20vw;
+    }
+
+    @include hover-supported {
+    }
+    .container-icon {
+      display: none;
+    }
+    .movie-element__infos {
+      display: none;
+    }
+
+    img {
+      opacity: 0;
+      transition: opacity 1s;
+    }
+  } 
+  
+  &.img-loading {
+    
+    &:after {
+      opacity: 1;
     }
   }
 }
